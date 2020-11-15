@@ -87,178 +87,319 @@ void iniciar_lista_fechada(){
   }
 } 
 
+void mover(){
+  short m;
+   for(m=0;m<contador_movimento;m++){
+    if(movimento_robo[m] == 'b'){
+      Serial.println("baixo");
+      //frente();
+      //parar();
+    }
+    else{
+      if(movimento_robo[m] == 'c'){
+        Serial.println("cima");
+        //tras();
+        //parar();        
+      }
+      else{
+        if(movimento_robo[m] == 'd'){
+          Serial.println("direita");
+          //direita();
+          //parar();
+        }
+        else{
+          if(movimento_robo[m] == 'e'){
+            Serial.println("esquerda");
+            //esquerda();
+            //parar();
+          }
+          else{
+            if(movimento_robo[m] == 'w'){
+              Serial.println("superior direita");
+              //direita(); //celula da direita depois pra celula de cima
+              //parar(); 
+              //tras();
+              //parar();             
+            }
+            else{
+              if(movimento_robo[m] == 'x'){
+                Serial.println("inferior direita");
+                //frente(); //celula da direita depois pra celula de baixo
+                //parar();                 
+                //direita(); 
+                //parar();            
+              }
+              else{
+                if(movimento_robo[m] == 'y'){
+                  Serial.println("superior esquerda");
+                  //esquerda(); //celula da esquerda depois pra celula de cima
+                  //parar(); 
+                  //tras();
+                  //para();             
+                }
+                else{
+                  if(movimento_robo[m] == 'z'){
+                    Serial.println("inferior esquerda");
+                    //esquerda();
+                    //para();
+                    //frente();
+                    //para();                              
+                  }
+                }
+              }
+            }
+          }
+        }          
+      }
+    }
+  }  
+}
+
+void melhor_caminho(byte x, byte y){
+  byte i, j;
+
+  for(i=0;i<num_linhas;i++){
+    for(j=0;j<num_colunas;j++){
+      if(matriz[x][y].pai==matriz[i][j].nome){ //se o nome da celula for igual ao pai da celula atual
+        if((x-1)==i && y==j){
+          movimento_robo[contador_movimento++]='c'; //***celula de cima, porém o robô irá fazer o caminho contrário(do início ao fim) por isso celula de baixo
+          x=i;
+          y=j;
+          //Serial.println("Cima");
+          if(x==x_fim && y==y_fim){
+            //Serial.println("Mover");
+            
+            mover();
+            //Serial.println("Fim 1");
+            tempo = millis();
+            //Serial.print("Tempo de execução em ms: ");
+            Serial.println(tempo);
+            delay(25000);    /////////////FIM
+          }
+          melhor_caminho(x, y);
+        }
+        else{
+          if((x+1)==i && y==j){
+            
+            movimento_robo[contador_movimento++]='b';
+            x=i;
+            y=j;
+            //Serial.println("Baixo");
+            if(x==x_fim && y==y_fim){
+              //Serial.println("Mover");
+              
+              mover();
+              //Serial.println("Fim 2");
+              tempo = millis();
+              //Serial.print("Tempo de execução em ms: ");
+              Serial.println(tempo);
+              delay(25000);
+            }
+            melhor_caminho(x, y);
+          }
+          else{
+            if(x==i && (y-1)==j){
+              //back
+              movimento_robo[contador_movimento++]='e'; //celula da esquerda, porém armazena direita
+              x=i;
+              y=j;
+              //Serial.println("Esquerda");
+              if(x==x_fim && y==y_fim){
+                //Serial.println("Mover");             
+                mover();
+                //Serial.println("Fim 3");
+                tempo = millis();
+                //Serial.print("Tempo de execução em ms: ");
+                Serial.println(tempo);
+                delay(25000);
+
+              }
+              melhor_caminho(x, y);
+            }
+            else{
+              if(x==i && (y+1)==j){
+              movimento_robo[contador_movimento++]='d';
+              x=i;
+              y=j;
+              //Serial.println("Direita");
+              if(x==x_fim && y==y_fim){
+                //Serial.println("Mover");
+                mover();
+                //Serial.println("Fim 4");
+                tempo = millis();
+                //Serial.print("Tempo de execução em ms: ");
+                Serial.println(tempo);
+                delay(25000);
+              }
+              melhor_caminho(x, y);    
+            }
+            else{
+              if(i==(x_atual-1) && j==(y_atual+1)){ //celula superior direita
+                movimento_robo[contador_movimento++]='w';
+                x=i;
+                y=j;
+                //Serial.println("Direita");
+                if(x==x_fim && y==y_fim){
+                  //Serial.println("Mover");
+                  mover();
+                  //Serial.println("Fim 4");
+                  tempo = millis();
+                  //Serial.print("Tempo de execução em ms: ");
+                  Serial.println(tempo);
+                  delay(25000);
+                }
+                melhor_caminho(x, y);
+              }
+              else{
+                if(i==(x_atual+1) && j==(y_atual+1)){ //celula inferior direita
+                  movimento_robo[contador_movimento++]='x';
+                  x=i;
+                  y=j;
+                  //Serial.println("Direita");
+                  if(x==x_fim && y==y_fim){
+                    //Serial.println("Mover");
+                    mover();
+                    //Serial.println("Fim 4");
+                    tempo = millis();
+                    //Serial.print("Tempo de execução em ms: ");
+                    Serial.println(tempo);
+                    delay(25000);
+                  }
+                  melhor_caminho(x, y);
+                }
+                else{
+                  if(i==(x_atual-1) && j==(y_atual-1)){ //celula superior esquerda
+                    movimento_robo[contador_movimento++]='y';
+                    x=i;
+                    y=j;
+                    //Serial.println("Direita");
+                    if(x==x_fim && y==y_fim){
+                      //Serial.println("Mover");
+                      mover();
+                      //Serial.println("Fim 4");
+                      tempo = millis();
+                      //Serial.print("Tempo de execução em ms: ");
+                      Serial.println(tempo);
+                      delay(25000);
+                    }
+                    melhor_caminho(x, y);
+                  }
+                  else{
+                    if(i==(x_atual+1) && j==(y_atual-1)){ //celula inferior esquerda
+                      movimento_robo[contador_movimento++]='z';
+                      x=i;
+                      y=j;
+                      //Serial.println("Direita");
+                      if(x==x_fim && y==y_fim){
+                        //Serial.println("Mover");
+                        mover();
+                        //Serial.println("Fim 4");
+                        tempo = millis();
+                        //Serial.print("Tempo de execução em ms: ");
+                        Serial.println(tempo);
+                        delay(25000);
+                      }
+                      melhor_caminho(x, y);
+                    }                 
+                  }                                                                              
+                 }
+                }
+              }
+            }
+          }
+        }       
+      }
+    }
+  }
+}
+
 void detectar_vizinhos(byte x_atual, byte y_atual){
   byte i, j, n;
   //nao pode considerar objeto e quem esta na lista aberta e fechada
   for(i=0;i<num_linhas;i++){
     for(j=0;j<num_colunas;j++){
       if(i==(x_atual-1) && j==y_atual && matriz[i][j].tag==0){ //se for um vizinho
-        matriz[i][j].pai = matriz[x_atual][y_atual].nome;
-        
-        if(i==(x_inicio-1) && j==y_inicio){ //A pesquisa termina quando o nó inicial é expandido. quando chegar em algum vizinho da posição inicial.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }
+        matriz[i][j].pai = matriz[x_atual][y_atual].nome;     
+
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;/////////////////////////////////////////////ADD NOS OUTROS ESSA LINHA
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-        }     
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
+        }
+    
       }
       if(i==x_atual && j==(y_atual+1) && matriz[i][j].tag==0){
         matriz[i][j].pai = matriz[x_atual][y_atual].nome;
-        
-        if(i==x_inicio && j==(y_inicio+1)){ //A pesquisa termina quando o nó inicial é expandido.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }
+       
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-        }     
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
+        }
+    
       }
       if(i==(x_atual+1) && j==y_atual && matriz[i][j].tag==0){
         matriz[i][j].pai = matriz[x_atual][y_atual].nome;
         
-        if(i==(x_inicio+1) && j==y_inicio){ //A pesquisa termina quando o nó inicial é expandido.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }          
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-        }      
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
+        }
+     
       }
       if(i==x_atual && j==(y_atual-1) && matriz[i][j].tag==0){
-        matriz[i][j].pai = matriz[x_atual][y_atual].nome;
-        
-        if(i==x_inicio && j==(y_inicio-1)){ //A pesquisa termina quando o nó inicial é expandido.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }          
+        matriz[i][j].pai = matriz[x_atual][y_atual].nome;      
+
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-        }     
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
+        }
       
       }
 
@@ -266,176 +407,96 @@ void detectar_vizinhos(byte x_atual, byte y_atual){
       if(i==(x_atual-1) && j==(y_atual+1) && matriz[i][j].tag==0){ //celula superior direita
         matriz[i][j].pai = matriz[x_atual][y_atual].nome;
         
-        if(i==(x_inicio-1) && j==(y_inicio+1)){ //A pesquisa termina quando o nó inicial é expandido.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }          
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-        }     
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
+        }
+    
       }
 
 
       if(i==(x_atual+1) && j==(y_atual+1) && matriz[i][j].tag==0){ //celula inferior direita
-        matriz[i][j].pai = matriz[x_atual][y_atual].nome;
-        
-        if(i==(x_inicio+1) && j==(y_inicio+1)){ //A pesquisa termina quando o nó inicial é expandido.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }          
+        matriz[i][j].pai = matriz[x_atual][y_atual].nome;        
+
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
+
       }
 
       if(i==(x_atual-1) && j==(y_atual-1) && matriz[i][j].tag==0){ //celula superior esquerda
         matriz[i][j].pai = matriz[x_atual][y_atual].nome;
         
-        if(i==(x_inicio-1) && j==(y_inicio-1)){ //A pesquisa termina quando o nó inicial é expandido.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }          
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-        }        
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
+        }
+        
       }
 
       if(i==(x_atual+1) && j==(y_atual-1) && matriz[i][j].tag==0){ //celula inferior esquerda
         matriz[i][j].pai = matriz[x_atual][y_atual].nome;
         
-        if(i==(x_inicio+1) && j==(y_inicio-1)){ //A pesquisa termina quando o nó inicial é expandido.
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //tem um FIM AQUI
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-            //TEM UM FIM AQUI
-          }          
+
+        if(matriz[i][j].indice==2){
+          matriz[i][j].h = 255;
+          matriz[i][j].k = 255;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
         else{
-          if(matriz[i][j].indice==2){
-            matriz[i][j].h = 255;
-            matriz[i][j].k = 255;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
-          else{
-            matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
-            matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
-            lista_aberta[it_aberta] = matriz[i][j];
-            it_aberta++;
-            ultimo++;
-            matriz[i][j].tag=1;
-          }
+          matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4;
+          matriz[i][j].k = matriz[x_atual][y_atual].k + 1.4;
+          lista_aberta[it_aberta] = matriz[i][j];
+          it_aberta++;
+          ultimo++;
+          matriz[i][j].tag=1;
         }
+        
       }          
     }
+  }
+  if(x_atual == x_inicio && y_atual == y_inicio){
+    melhor_caminho(x_atual, y_atual);
   }
 }
 
