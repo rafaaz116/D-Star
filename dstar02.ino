@@ -5,6 +5,17 @@ byte x_inicio = 5;
 byte y_inicio = 1;
 byte x_fim = 0;
 byte y_fim = 6;
+byte x_robo; 
+byte y_robo;
+byte obstaculo_x;
+byte obstaculo_y;
+byte x_pos_robo;
+byte y_pos_robo;
+
+
+//retirar depois, apenas para compilar o programa.
+byte atual2x;
+byte atual2y;
 
 typedef struct cel{
   double h;
@@ -31,11 +42,8 @@ byte contador_movimento=0;
 byte primeira_passada=1;
 
 //Novas variáveis:
-byte atual2x=5;
-byte atual2y=1;
-byte x_robo, y_robo;
-byte obsx;
-byte obsy;
+
+
 
 
 //void melhor_caminho(byte x, byte y);
@@ -44,6 +52,8 @@ byte obsy;
 void iniciar_matriz(){
   byte i, j;
   byte cont=1;
+  byte x_pos_robo, y_pos_robo;
+  
   for(i=0;i<num_linhas;i++){
     for(j=0;j<num_colunas;j++){
       if(((i>=0 && i<=3) && (j>=1 && j<=2)) || (i==4 && j==3)){
@@ -116,20 +126,20 @@ void add_lista_aberta(byte m, byte n){
   }
 
   if(flag == 0){
-    Serial.println("Este valor não está na lista aberta, portanto add ele.");
+    //Serial.println("Este valor não está na lista aberta, portanto add ele.");
     lista_aberta[it_aberta] = matriz[m][n];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
     it_aberta++;
     ultimo++;
     matriz[m][n].tag=1; //analisado de novo, ou seja permanece com 1.
   }
   else{
-    Serial.println("Este valor já esta na lista aberta, portanto não adiciona");
+    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona");
   }
 
 }
 
 void atualiza_matriz(){
-  //int i, j;
+  int i, j;
   //byte x_pos_robo, y_pos_robo;
   
   matriz[x_atual][y_atual].h = 255; //a posição atual é um objeto
@@ -151,7 +161,8 @@ void atualiza_matriz(){
   insertion_sort(primeiro, ultimo);
   imprime_lista_aberta(primeiro);
 
-  while(lista_aberta[primeiro].nome != matriz[x_atual][y_atual].nome){ //enquanto o primeiro da lista aberta for diferente da posição do obstáculo, calcula os custos de adjacentes.
+  Serial.println(matriz[obstaculo_x][obstaculo_y].nome); 
+  while(lista_aberta[primeiro].nome != matriz[obstaculo_x][obstaculo_y].nome){ //enquanto o primeiro da lista aberta for diferente da posição do obstáculo, calcula os custos de adjacentes.
     detectar_vizinhos(); //como já está tudo calculado, ele não vai calcular os custos.
     lista_fechada[it_fechada] = lista_aberta[primeiro];
     it_fechada++;
@@ -159,11 +170,41 @@ void atualiza_matriz(){
     insertion_sort(primeiro, ultimo);
     busca_celula_analisar();
     Serial.println(lista_aberta[primeiro].nome);  
-    Serial.println(matriz[x_atual][y_atual].nome); 
+    Serial.println(matriz[obstaculo_x][obstaculo_y].nome); 
+  }
+  
+  imprime_lista_aberta(primeiro);
+  Serial.println(" ");
+  Serial.println(matriz[x_atual][y_atual].nome);
+  //após chegar no nó obstáculo na lista aberta, procura por quem aponta pra ele.
+  for(i=0;i<num_linhas;i++){
+    for(j=0;j<num_colunas;j++){
+      if(matriz[x_atual][y_atual].nome == matriz[i][j].pai){ //celula atual.nome == posicao iterativa.pai, se tem uma celula vizinha que aponta pra o atual
+        Serial.println(matriz[i][j].pai);
+        Serial.println(matriz[x_atual][y_atual].nome);
+        matriz[i][j].h = 255; //raise, elevação.
+        x_pos_robo = i; //x_pos_robo
+        y_pos_robo = j; //y_pos_robo
+        i = num_linhas; //sai do loop
+        j = num_colunas;       
+      }
+    }
   }
 
-  imprime_lista_aberta(primeiro);
-
+  
+  while(lista_aberta[primeiro].nome != matriz[x_pos_robo][y_pos_robo].nome){ // repete o mesmo while, porém com outra posição atual, enquanto não chega na posição que aponta para o obstáculo(no caso a posição que aponta para o robô).
+    detectar_vizinhos();
+    lista_fechada[it_fechada] = lista_aberta[primeiro];
+    it_fechada++;
+    primeiro++;
+    insertion_sort(primeiro, ultimo);
+    busca_celula_analisar();  //posição da primeira celula da lista aberta!
+  }
+  
+  Serial.println("posição em que esta o robô:");
+  Serial.println(x_atual);
+  Serial.println(y_atual);
+  //imprimir_matriz_h();
   delay(60000);
   /*
   lista_aberta[it_aberta] = matriz[x][y];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
@@ -749,6 +790,11 @@ void mover(){
                 
                 x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
                 y_atual = y_atual + 1;
+
+                //salva a posição do obstáculo, pois será usada posteriormente.
+                obstaculo_x = x_atual;
+                obstaculo_y = y_atual; 
+                
                 atualiza_matriz();  //envia como parâmetro a posição do robô.
                 //x_atual = x_robo;
                 //y_atual = y_robo;
