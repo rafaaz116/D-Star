@@ -30,9 +30,16 @@ char movimento_robo[num_linhas*num_colunas]; //'b' - baixo, 'c' - cima, 'd' - di
 byte contador_movimento=0;
 byte primeira_passada=1;
 
+//Novas variáveis:
+byte atual2x=5;
+byte atual2y=1;
+byte x_robo, y_robo;
+byte obsx;
+byte obsy;
 
-void melhor_caminho(byte x, byte y);
 
+//void melhor_caminho(byte x, byte y);
+//void mover(byte x, byte y);
 
 void iniciar_matriz(){
   byte i, j;
@@ -91,12 +98,74 @@ void iniciar_lista_fechada(){
   }
 } 
 
-void atualiza_matriz(int x, int y){
-  int i, j;
-  int x_pos_robo, y_pos_robo;
+
+
+//AJUSTAR AQUI
+void add_lista_aberta(byte m, byte n){
+  //percorre lista aberta, para verificar se esse nó esta nela.
+  byte i;
+  byte flag = 0;
+  for(i=primeiro;i<num_linhas*num_colunas;i++){
+    if(matriz[m][n].nome != lista_aberta[i].nome){
+      flag=0;
+    }
+    else{
+      flag=1;
+      i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
+    }
+  }
+
+  if(flag == 0){
+    Serial.println("Este valor não está na lista aberta, portanto add ele.");
+    lista_aberta[it_aberta] = matriz[m][n];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
+    it_aberta++;
+    ultimo++;
+    matriz[m][n].tag=1; //analisado de novo, ou seja permanece com 1.
+  }
+  else{
+    Serial.println("Este valor já esta na lista aberta, portanto não adiciona");
+  }
+
+}
+
+void atualiza_matriz(){
+  //int i, j;
+  //byte x_pos_robo, y_pos_robo;
   
-  matriz[x][y].h = 255; //a posição atual é um objeto 
-  
+  matriz[x_atual][y_atual].h = 255; //a posição atual é um objeto
+  Serial.println(matriz[x_atual][y_atual].h); 
+
+  imprime_lista_aberta(primeiro);
+  //add na lista aberta o nó em que está o obstáculo e seus nós adjacentes.
+  add_lista_aberta(x_atual, y_atual);
+  add_lista_aberta(x_atual-1, y_atual);
+  add_lista_aberta(x_atual, y_atual+1);
+  add_lista_aberta(x_atual+1, y_atual);
+  add_lista_aberta(x_atual, y_atual-1);
+  add_lista_aberta(x_atual-1, y_atual+1);
+  add_lista_aberta(x_atual+1, y_atual+1);
+  add_lista_aberta(x_atual-1, y_atual-1);
+  add_lista_aberta(x_atual+1, y_atual-1);
+
+  imprime_lista_aberta(primeiro);
+  insertion_sort(primeiro, ultimo);
+  imprime_lista_aberta(primeiro);
+
+  while(lista_aberta[primeiro].nome != matriz[x_atual][y_atual].nome){ //enquanto o primeiro da lista aberta for diferente da posição do obstáculo, calcula os custos de adjacentes.
+    detectar_vizinhos(); //como já está tudo calculado, ele não vai calcular os custos.
+    lista_fechada[it_fechada] = lista_aberta[primeiro];
+    it_fechada++;
+    primeiro++;
+    insertion_sort(primeiro, ultimo);
+    busca_celula_analisar();
+    Serial.println(lista_aberta[primeiro].nome);  
+    Serial.println(matriz[x_atual][y_atual].nome); 
+  }
+
+  imprime_lista_aberta(primeiro);
+
+  delay(60000);
+  /*
   lista_aberta[it_aberta] = matriz[x][y];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
   it_aberta++;
   ultimo++;
@@ -148,8 +217,8 @@ void atualiza_matriz(int x, int y){
   insertion_sort(primeiro, ultimo);
 
   //ele vai fazer este processo até que chegue em uma posição da lista aberta que seja o obstáculo, aí ele analisa quem aponta pra ele
-  while(lista_aberta[primeiro].nome != matriz[x][y].nome){ //ANALISAR AONDE TINHA PARADO O X ATUAL E O Y ATUAL KKK, enquanto x do objeto for diferente do atual
-    detectar_vizinhos(x_atual, y_atual);
+  while(lista_aberta[primeiro].nome != matriz[x_atual][y_atual].nome){ //ANALISAR AONDE TINHA PARADO O X ATUAL E O Y ATUAL KKK, enquanto x do objeto for diferente do atual
+    detectar_vizinhos(); //como já está tudo calculado, ele não vai calcular os custos.
     lista_fechada[it_fechada] = lista_aberta[primeiro];
     it_fechada++;
     primeiro++;
@@ -178,9 +247,9 @@ void atualiza_matriz(int x, int y){
   }
   //se for igual a posição que aponta para o obstáculo(é a posição que está o robô)
   //> (3,2)
-  x_atual = x_pos_robo;
-  y_atual = y_pos_robo;
-  while(lista_aberta[primeiro].k < matriz[x_atual][y_atual].h){
+  atual2x = x_pos_robo;
+  atual2y = y_pos_robo;
+  while(lista_aberta[primeiro].k < matriz[atual2x][atual2y].h){
     if(matriz[x_pos_robo][y_pos_robo].h > matriz[x_pos_robo][y_pos_robo].k){
       for(i=0;i<num_linhas;i++){
         for(j=0;j<num_colunas;j++){
@@ -434,8 +503,8 @@ void atualiza_matriz(int x, int y){
         for(j=0;j<num_colunas;j++){
           if((x_pos_robo-1)==i && (y_pos_robo==j)){ //é um vizinho
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -445,8 +514,8 @@ void atualiza_matriz(int x, int y){
           }
           if((x_pos_robo)==i && ((y_pos_robo+1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -456,8 +525,8 @@ void atualiza_matriz(int x, int y){
           }
           if((x_pos_robo+1)==i && (y_pos_robo==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -467,8 +536,8 @@ void atualiza_matriz(int x, int y){
           }
           if((x_pos_robo)==i && ((y_pos_robo-1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -478,8 +547,8 @@ void atualiza_matriz(int x, int y){
           }
           if((x_pos_robo-1)==i && ((y_pos_robo+1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -489,8 +558,8 @@ void atualiza_matriz(int x, int y){
           }
           if((x_pos_robo+1)==i && ((y_pos_robo+1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; ////vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -500,8 +569,8 @@ void atualiza_matriz(int x, int y){
           }
           if((x_pos_robo-1)==i && ((y_pos_robo-1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; ////vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -511,8 +580,8 @@ void atualiza_matriz(int x, int y){
           }
           if((x_pos_robo+1)==i && ((y_pos_robo-1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -533,31 +602,48 @@ void atualiza_matriz(int x, int y){
     insertion_sort(primeiro, ultimo);
     busca_celula_analisar(); 
   }
-  
+
+  */
 }
 
-void mover(byte x_atual, byte y_atual){
+
+
+
+
+//MOVER
+void mover(){
   byte m;
-  byte x_robo, y_robo;
+
   //vou colocar um obstáculo no ambiente, na posição (3,3).
   matriz[3][3].indice = 2;
+  Serial.print("Posição obstáculo:");
+  Serial.println(matriz[3][3].indice);
+  //x_atual=x;
+  //y_atual=y;
   
    for(m=0;m<contador_movimento;m++){
     if(movimento_robo[m] == 'b'){
       //antes de o robô ir pra posição superior direita, verifica se tem um obstáculo.
-      if(matriz[x_atual+1][y_atual].indice != 2){ //se não tiver um objeto.
+      if(matriz[atual2x+1][atual2y].indice != 2){ //se não tiver um objeto.
         Serial.println("nó de baixo, robô vai pra frente.");
-        x_atual = x_atual + 1;
-        y_atual = y_atual;
+        atual2x = atual2x + 1;
+        //atual2y = y_atual;
         //frente();
         //parar();            
       }
       else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
-        x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
-        y_robo = y_atual;
-        atualiza_matriz(x_atual+1, y_atual);  //envia como parâmetro a posição do obstáculo encontrado pelo robô.
-        melhor_caminho(x_robo, y_robo);
-        mover(x_robo, y_robo);                
+        x_robo = atual2x; //salva a posição em que o robô achou o obstáculo.
+        y_robo = atual2y;
+        Serial.println("Para o robô e atualiza a tabela.");       
+        
+        //Serial.println("Para o robô e atualiza a tabela.");
+        //atualiza_matriz(atual2x+1, atual2y);  //envia como parâmetro a posição do obstáculo encontrado pelo robô.
+        
+        x_atual = x_robo;
+        y_atual = y_robo;
+        melhor_caminho();
+        mover();
+                       
       }                          
       //x = x + 1;        
       //frente();//SENSOR MEDE PRA VER SE TEM UM OBSTÁCULO, se tem pára e anda em um direção contrária, senão o robô permanece na mesma direção.
@@ -571,19 +657,27 @@ void mover(byte x_atual, byte y_atual){
     }
     else{
       if(movimento_robo[m] == 'c'){
-        if(matriz[x_atual-1][y_atual].indice != 2){ //se não tiver um objeto.
+        if(matriz[atual2x-1][atual2y].indice != 2){ //se não tiver um objeto.
           Serial.println("Cima.");
-          x_atual = x_atual - 1;
-          y_atual = y_atual;
+          atual2x = atual2x - 1;
+          //y_atual = y_atual;
           //tras();
           //parar();            
         }
         else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
+          Serial.println("Para o robô e atualiza a tabela.");
+          //delay(25000);
+
+          
+          /*
           x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
           y_robo = y_atual;
           atualiza_matriz(x_atual-1, y_atual);  //envia como parâmetro a posição do robô.
-          melhor_caminho(x_robo, y_robo);
-          mover(x_robo, y_robo);                
+          x_atual = x_robo;
+          y_atual = y_robo;
+          melhor_caminho();
+          mover();
+          */                
         }         
       }
       else{
@@ -599,9 +693,11 @@ void mover(byte x_atual, byte y_atual){
           else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
             x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
             y_robo = y_atual;
-            atualiza_matriz(x_atual, y_atual+1);  //envia como parâmetro a posição do robô.
-            melhor_caminho(x_robo, y_robo);
-            mover(x_robo, y_robo);                
+            //atualiza_matriz(x_atual, y_atual+1);  //envia como parâmetro a posição do robô.
+            x_atual = x_robo;
+            y_atual = y_robo;
+            melhor_caminho();
+            mover();                
           }  
         }
         else{
@@ -617,36 +713,55 @@ void mover(byte x_atual, byte y_atual){
             else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
               x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
               y_robo = y_atual;
-              atualiza_matriz(x_atual, y_atual-1);  //envia como parâmetro a posição do robô.
-              melhor_caminho(x_robo, y_robo);
-              mover(x_robo, y_robo);                
+              //atualiza_matriz(x_atual, y_atual-1);  //envia como parâmetro a posição do robô.
+              x_atual = x_robo;
+              y_atual = y_robo;
+              melhor_caminho();
+              mover();                
             }            
           }
           else{
             if(movimento_robo[m] == 'w'){              
               //antes de o robô ir pra posição superior direita, verifica se tem um obstáculo.
-              if(matriz[x_atual-1][y_atual+1].indice != 2){ //se não tiver um objeto.
+              if(matriz[x_atual-1][y_atual+1].indice != 2){ //verifica se no nó adjacente tem um obstáculo, se tiver atualiza a matriz.
                 Serial.println("superior direita");
-                x_atual = x_atual - 1;
+                //Funcionou
+                //atual2x = atual2x - 1;
+                //atual2y = atual2y + 1;
+                x_atual = x_atual - 1; //ok, com posição atual, retirei argumentos do melhor_caminho().
                 y_atual = y_atual + 1;
+                
+                
                 //direita(); //celula da direita depois pra celula de cima
                 //parar(); 
                 //tras();
                 //parar();                
               }
               else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
+                Serial.println("Para o robô e atualiza a tabela.");
+                //delay(25000);
+                
                 x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
                 y_robo = y_atual;
-                atualiza_matriz(x_atual-1, y_atual+1);  //envia como parâmetro a posição do robô.
-                melhor_caminho(x_robo, y_robo);
-                mover(x_robo, y_robo);
-                Serial.println("FIMMMMM");                
+                Serial.println(x_robo);
+                Serial.println(y_robo);
+                //delay(25000);
+                
+                x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+                y_atual = y_atual + 1;
+                atualiza_matriz();  //envia como parâmetro a posição do robô.
+                //x_atual = x_robo;
+                //y_atual = y_robo;
+                //melhor_caminho();
+                //mover();
+                //Serial.println("FIMMMMM");
+                                
               }            
             }
             else{
               if(movimento_robo[m] == 'x'){              
                 if(matriz[x_atual+1][y_atual+1].indice != 2){ //se não tiver um objeto.
-                  Serial.println("inferior direita");
+                  //Serial.println("inferior direita");
                   x_atual = x_atual + 1;
                   y_atual = y_atual + 1;
                   //frente(); //celula da direita depois pra celula de baixo
@@ -657,10 +772,12 @@ void mover(byte x_atual, byte y_atual){
                 else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
                   x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
                   y_robo = y_atual;
-                  atualiza_matriz(x_atual+1, y_atual+1);  //envia como parâmetro a posição do robô.
-                  melhor_caminho(x_robo, y_robo);
-                  mover(x_robo, y_robo);
-                  Serial.println("FIMMMMM");                
+                  //atualiza_matriz(x_atual+1, y_atual+1);  //envia como parâmetro a posição do robô.
+                  x_atual = x_robo;
+                  y_atual = y_robo;
+                  melhor_caminho();
+                  mover();
+                  //Serial.println("FIMMMMM");                
                 }            
               }
               else{
@@ -668,7 +785,7 @@ void mover(byte x_atual, byte y_atual){
 
 
                   if(matriz[x_atual-1][y_atual-1].indice != 2){ //se não tiver um objeto.
-                    Serial.println("superior esquerda");                    
+                    //Serial.println("superior esquerda");                    
                     x_atual = x_atual - 1;
                     y_atual = y_atual - 1;
                     //esquerda(); //celula da esquerda depois pra celula de cima
@@ -679,17 +796,19 @@ void mover(byte x_atual, byte y_atual){
                   else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
                     x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
                     y_robo = y_atual;
-                    atualiza_matriz(x_atual-1, y_atual-1);  //envia como parâmetro a posição do robô.
-                    melhor_caminho(x_robo, y_robo);
-                    mover(x_robo, y_robo);
-                    Serial.println("FIMMMMM");                
+                    //atualiza_matriz(x_atual-1, y_atual-1);  //envia como parâmetro a posição do robô.
+                    x_atual = x_robo;
+                    y_atual = y_robo;
+                    melhor_caminho();
+                    mover();
+                    //Serial.println("FIMMMMM");                
                   }                               
                 }
                 else{
                   if(movimento_robo[m] == 'z'){
 
                     if(matriz[x_atual+1][y_atual-1].indice != 2){ //se não tiver um objeto.
-                      Serial.println("inferior esquerda");
+                      //Serial.println("inferior esquerda");
                       x_atual = x_atual + 1;
                       y_atual = y_atual - 1;
                       //esquerda();
@@ -700,10 +819,12 @@ void mover(byte x_atual, byte y_atual){
                     else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
                       x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
                       y_robo = y_atual;
-                      atualiza_matriz(x_atual+1, y_atual-1);  //envia como parâmetro a posição do robô.
-                      melhor_caminho(x_robo, y_robo);
-                      mover(x_robo, y_robo);
-                      Serial.println("FIMMMMM");                
+                      //atualiza_matriz(x_atual+1, y_atual-1);  //envia como parâmetro a posição do robô.
+                      x_atual = x_robo;
+                      y_atual = y_robo;
+                      melhor_caminho();
+                      mover();
+                      //Serial.println("FIMMMMM");                
                     }                                                         
                   }
                 }
@@ -716,8 +837,14 @@ void mover(byte x_atual, byte y_atual){
   }  
 }
 
-void melhor_caminho(byte x_atual, byte y_atual){
+void melhor_caminho(){
   byte i, j;
+  //byte inix, iniy;
+  //inix=5;
+  //iniy=1;
+  //Serial.print("Melhor Caminho, posição atual:");
+  //Serial.println(x_atual);
+  //Serial.println(y_atual);
 
   for(i=0;i<num_linhas;i++){ //percorre toda matriz.
     for(j=0;j<num_colunas;j++){
@@ -726,18 +853,23 @@ void melhor_caminho(byte x_atual, byte y_atual){
           movimento_robo[contador_movimento++]='c'; //***celula de cima, porém o robô irá fazer o caminho contrário(do início ao fim) por isso celula de baixo
           x_atual=i;
           y_atual=j;
-          //Serial.println("Cima");
+          Serial.println("Cima");
           if(x_atual==x_fim && y_atual==y_fim){
             //Serial.println("Mover");
-            
-            mover(x_atual, y_atual);
+            //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+            //atualizar a posição atual
+            x_atual= x_atual + 5;
+            y_atual= y_atual - 5;
+            //Serial.println(x_atual);
+            //Serial.println(y_atual);
+            mover();
             //Serial.println("Fim 1");
             tempo = millis();
             //Serial.print("Tempo de execução em ms: ");
             Serial.println(tempo);
             delay(25000);    /////////////FIM
           }
-          melhor_caminho(x_atual, y_atual);
+          melhor_caminho(); //x_atual, y_atual
         }
         else{
           if((x_atual+1)==i && y_atual==j){
@@ -745,18 +877,24 @@ void melhor_caminho(byte x_atual, byte y_atual){
             movimento_robo[contador_movimento++]='b';
             x_atual=i;
             y_atual=j;
-            //Serial.println("Baixo");
+            Serial.println("Baixo");
             if(x_atual==x_fim && y_atual==y_fim){
               //Serial.println("Mover");
-              
-              mover(x_atual, y_atual);
+              //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+              //x_atual=5;
+              //y_atual=1;
+              x_atual= x_atual + 5;
+              y_atual= y_atual - 5;
+              //Serial.println(x_atual);
+              //Serial.println(y_atual);
+              mover();
               //Serial.println("Fim 2");
               tempo = millis();
               //Serial.print("Tempo de execução em ms: ");
               Serial.println(tempo);
               delay(25000);
             }
-            melhor_caminho(x_atual, y_atual);
+            melhor_caminho();
           }
           else{
             if(x_atual==i && (y_atual-1)==j){
@@ -764,10 +902,15 @@ void melhor_caminho(byte x_atual, byte y_atual){
               movimento_robo[contador_movimento++]='e'; //celula da esquerda, porém armazena direita
               x_atual=i;
               y_atual=j;
-              //Serial.println("Esquerda");
+              Serial.println("Esquerda");
               if(x_atual==x_fim && y_atual==y_fim){
-                //Serial.println("Mover");             
-                mover(x_atual, y_atual);
+                //Serial.println("Mover");
+                //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+                x_atual= x_atual + 5;
+                y_atual= y_atual - 5;
+                //Serial.println(x_atual);
+                //Serial.println(y_atual);          
+                mover();
                 //Serial.println("Fim 3");
                 tempo = millis();
                 //Serial.print("Tempo de execução em ms: ");
@@ -775,24 +918,31 @@ void melhor_caminho(byte x_atual, byte y_atual){
                 delay(25000);
 
               }
-              melhor_caminho(x_atual, y_atual);
+              melhor_caminho();
             }
             else{
               if(x_atual==i && (y_atual+1)==j){
               movimento_robo[contador_movimento++]='d';
               x_atual=i;
               y_atual=j;
-              //Serial.println("Direita");
+              Serial.println("Direita");
               if(x_atual==x_fim && y_atual==y_fim){
                 //Serial.println("Mover");
-                mover(x_atual, y_atual);
+                //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+                x_atual= x_atual + 5;
+                y_atual= y_atual - 5;
+                //x_atual=5;
+                //y_atual=1;
+                //Serial.println(x_atual);
+                //Serial.println(y_atual);
+                mover();
                 //Serial.println("Fim 4");
                 tempo = millis();
                 //Serial.print("Tempo de execução em ms: ");
                 Serial.println(tempo);
                 delay(25000);
               }
-              melhor_caminho(x_atual, y_atual);    
+              melhor_caminho();    
             }
             else{
               if(i==(x_atual-1) && j==(y_atual+1)){ //celula superior direita
@@ -802,14 +952,35 @@ void melhor_caminho(byte x_atual, byte y_atual){
                 Serial.println("Superior Direita");
                 if(x_atual==x_fim && y_atual==y_fim){
                   //Serial.println("Mover");
-                  mover(x_atual, y_atual);
-                  //Serial.println("Fim 4");
+                  //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+                  //x_atual=inix;
+                  //y_atual=iniy;
+                  
+                  
+                  //x_atual= x_atual + 5;
+                  //y_atual= y_atual - 5;
+                  
+                  
+                  
+                  //Serial.println(x_atual);
+                  //Serial.println(y_atual);
+                  //Serial.print("Melhor Caminho, posição atual:");
+                  //Serial.println(x_atual);
+                  //Serial.println(y_atual);
+                  
+                  x_atual = x_inicio;
+                  y_atual = y_inicio;
+                  
+                  mover();
+                  
+                  
+                  Serial.println("Fim 4");
                   tempo = millis();
                   //Serial.print("Tempo de execução em ms: ");
                   Serial.println(tempo);
                   delay(25000);
                 }
-                melhor_caminho(x_atual, y_atual);
+                melhor_caminho();
               }
               else{
                 if(i==(x_atual+1) && j==(y_atual+1)){ //celula inferior direita
@@ -819,48 +990,70 @@ void melhor_caminho(byte x_atual, byte y_atual){
                   Serial.println("Inferior Direita");
                   if(x_atual==x_fim && y_atual==y_fim){
                     //Serial.println("Mover");
-                    mover(x_atual, y_atual);
+                    //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+                    //x_atual=5;
+                    //y_atual=1;
+                    x_atual= x_atual + 5;
+                    y_atual= y_atual - 5;
+                    //Serial.println(x_atual);
+                    //Serial.println(y_atual);
+                    mover();
                     //Serial.println("Fim 4");
                     tempo = millis();
                     //Serial.print("Tempo de execução em ms: ");
                     Serial.println(tempo);
                     delay(25000);
                   }
-                  melhor_caminho(x_atual, y_atual);
+                  melhor_caminho();
                 }
                 else{
                   if(i==(x_atual-1) && j==(y_atual-1)){ //celula superior esquerda
                     movimento_robo[contador_movimento++]='y';
                     x_atual=i;
                     y_atual=j;
-                    //Serial.println("Superior Esquerda");
+                    Serial.println("Superior Esquerda");
                     if(x_atual==x_fim && y_atual==y_fim){
+                      //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+                      //x_atual=5;
+                      //y_atual=1;
+                      x_atual= x_atual + 5;
+                      y_atual= y_atual - 5;
+                      //Serial.println(x_atual);
+                      //Serial.println(y_atual);
                       //Serial.println("Mover");
-                      mover(x_atual, y_atual);
+                      mover();
                       //Serial.println("Fim 4");
                       tempo = millis();
                       //Serial.print("Tempo de execução em ms: ");
                       Serial.println(tempo);
                       delay(25000);
                     }
-                    melhor_caminho(x_atual, y_atual);
+                    melhor_caminho();
                   }
                   else{
+                    
                     if(i==(x_atual+1) && j==(y_atual-1)){ //celula inferior esquerda
                       movimento_robo[contador_movimento++]='z';
                       x_atual=i;
                       y_atual=j;
-                      //Serial.println("Inferior Esquerda");
+                      Serial.println("Inferior Esquerda");
                       if(x_atual==x_fim && y_atual==y_fim){
+                        //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
+                        //x_atual=5;
+                        //y_atual=1;
+                        x_atual= x_atual + 5;
+                        y_atual= y_atual - 5;
+                        //Serial.println(x_atual);
+                        //Serial.println(y_atual);
                         //Serial.println("Mover");
-                        mover(x_atual, y_atual);
+                        mover();
                         //Serial.println("Fim 4");
                         tempo = millis();
                         //Serial.print("Tempo de execução em ms: ");
                         Serial.println(tempo);
                         delay(25000);
                       }
-                      melhor_caminho(x_atual, y_atual);
+                      melhor_caminho();
                       
                      }
                                       
@@ -876,7 +1069,7 @@ void melhor_caminho(byte x_atual, byte y_atual){
   }
 }
 
-void detectar_vizinhos(byte x_atual, byte y_atual){
+void detectar_vizinhos(){
   byte i, j, n;
   //nao pode considerar objeto e quem esta na lista aberta e fechada
   for(i=0;i<num_linhas;i++){
@@ -904,7 +1097,7 @@ void detectar_vizinhos(byte x_atual, byte y_atual){
       }
       if(i==x_atual && j==(y_atual+1) && matriz[i][j].tag==0){
         matriz[i][j].pai = matriz[x_atual][y_atual].nome;
-       
+        
         if(matriz[i][j].indice==2){
           matriz[i][j].h = 255;
           matriz[i][j].k = 255;
@@ -1056,11 +1249,14 @@ void detectar_vizinhos(byte x_atual, byte y_atual){
         }
         
       }  
-      if(x_atual==x_inicio && y_atual==y_inicio){
-        Serial.println("Chama melhor caminho v"); //pq ta entrando aqui?
+      if(x_atual==x_inicio && y_atual==y_inicio){ //x_atual==x_inicio && y_atual==y_inicio,
+        Serial.println("Chama a função melhor caminho."); //pq ta entrando aqui?
         //Serial.println(i); // ta dando bug quando comparo i e j
         //Serial.println(j); //bug
-        melhor_caminho(x_atual, y_atual);
+        //robo_x= x_atual;
+        //robo_y= y_atual
+        //delay(200000);
+        melhor_caminho();//x_atual==x_inicio && y_atual==y_inicio
       }       
     }
   }
@@ -1151,7 +1347,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   if(primeira_passada == 1){  
     iniciar_matriz();
-    imprimir_matriz_indice(); //Impressão. 
+    //imprimir_matriz_indice(); //Impressão. 
     iniciar_lista_aberta();
     iniciar_lista_fechada();
     x_atual=x_fim;
@@ -1163,14 +1359,14 @@ void loop() {
     matriz[x_atual][y_atual].tag = 1;    
   }
   primeira_passada = 0;
-  detectar_vizinhos(x_atual, y_atual);
+  detectar_vizinhos();
   lista_fechada[it_fechada] = lista_aberta[primeiro];
   it_fechada++;
   primeiro++;
   insertion_sort(primeiro, ultimo);
   busca_celula_analisar();
   //posicao atual
-  imprimir_matriz_h();//Impressão.
+  //imprimir_matriz_h();//Impressão.
 
   //imprime_lista_aberta(primeiro);
   //imprime_lista_fechada();
