@@ -635,8 +635,6 @@ void mover(){
   matriz[3][3].indice = 2;
   Serial.print("Posição obstáculo:");
   Serial.println(matriz[3][3].indice);
-  //x_atual=x;
-  //y_atual=y;
   
    for(m=0;m<contador_movimento;m++){
     if(movimento_robo[m] == 'b'){
@@ -649,17 +647,29 @@ void mover(){
         //parar();            
       }
       else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
-        x_robo = atual2x; //salva a posição em que o robô achou o obstáculo.
-        y_robo = atual2y;
-        Serial.println("Para o robô e atualiza a tabela.");       
+        Serial.println("Para o robô e atualiza a tabela.");
+        //delay(25000);               
+        x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
+        y_robo = y_atual;
+        //Serial.println(x_robo);
+        //Serial.println(y_robo);
+        //delay(25000);
         
-        //Serial.println("Para o robô e atualiza a tabela.");
-        //atualiza_matriz(atual2x+1, atual2y);  //envia como parâmetro a posição do obstáculo encontrado pelo robô.
+        x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+        y_atual = y_atual + 1;
+
+        //salva a posição do obstáculo, pois será usada posteriormente.
+        obstaculo_x = x_atual;
+        obstaculo_y = y_atual; 
         
-        x_atual = x_robo;
-        y_atual = y_robo;
-        melhor_caminho();
-        mover();
+        atualiza_matriz();  //envia como parâmetro a posição do robô.
+        Serial.println("Enfim, todos os custos recalculados.");
+        delay(60000);                
+        //x_atual = x_robo;
+        //y_atual = y_robo;
+        //melhor_caminho();
+        //mover();
+        //Serial.println("FIMMMMM"); 
                        
       }                          
       //x = x + 1;        
@@ -683,18 +693,28 @@ void mover(){
         }
         else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
           Serial.println("Para o robô e atualiza a tabela.");
-          //delay(25000);
-
-          
-          /*
+          //delay(25000);               
           x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
           y_robo = y_atual;
-          atualiza_matriz(x_atual-1, y_atual);  //envia como parâmetro a posição do robô.
-          x_atual = x_robo;
-          y_atual = y_robo;
-          melhor_caminho();
-          mover();
-          */                
+          //Serial.println(x_robo);
+          //Serial.println(y_robo);
+          //delay(25000);
+          
+          x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+          y_atual = y_atual + 1;
+
+          //salva a posição do obstáculo, pois será usada posteriormente.
+          obstaculo_x = x_atual;
+          obstaculo_y = y_atual; 
+          
+          atualiza_matriz();  //envia como parâmetro a posição do robô.
+          Serial.println("Enfim, todos os custos recalculados.");
+          delay(60000);                
+          //x_atual = x_robo;
+          //y_atual = y_robo;
+          //melhor_caminho();
+          //mover();
+          //Serial.println("FIMMMMM");             
         }         
       }
       else{
@@ -708,13 +728,29 @@ void mover(){
             //parar();             
           }
           else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
-            x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
-            y_robo = y_atual;
-            //atualiza_matriz(x_atual, y_atual+1);  //envia como parâmetro a posição do robô.
-            x_atual = x_robo;
-            y_atual = y_robo;
-            melhor_caminho();
-            mover();                
+              Serial.println("Para o robô e atualiza a tabela.");
+              //delay(25000);               
+              x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
+              y_robo = y_atual;
+              //Serial.println(x_robo);
+              //Serial.println(y_robo);
+              //delay(25000);
+              
+              x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+              y_atual = y_atual + 1;
+
+              //salva a posição do obstáculo, pois será usada posteriormente.
+              obstaculo_x = x_atual;
+              obstaculo_y = y_atual; 
+              
+              atualiza_matriz();  //envia como parâmetro a posição do robô.
+              Serial.println("Enfim, todos os custos recalculados.");
+              delay(60000);                
+              //x_atual = x_robo;
+              //y_atual = y_robo;
+              //melhor_caminho();
+              //mover();
+              //Serial.println("FIMMMMM");                
           }  
         }
         else{
@@ -728,13 +764,29 @@ void mover(){
               //parar();              
             }
             else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
+              Serial.println("Para o robô e atualiza a tabela.");
+              //delay(25000);               
               x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
               y_robo = y_atual;
-              //atualiza_matriz(x_atual, y_atual-1);  //envia como parâmetro a posição do robô.
-              x_atual = x_robo;
-              y_atual = y_robo;
-              melhor_caminho();
-              mover();                
+              //Serial.println(x_robo);
+              //Serial.println(y_robo);
+              //delay(25000);
+              
+              x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+              y_atual = y_atual + 1;
+
+              //salva a posição do obstáculo, pois será usada posteriormente.
+              obstaculo_x = x_atual;
+              obstaculo_y = y_atual; 
+              
+              atualiza_matriz();  //envia como parâmetro a posição do robô.
+              Serial.println("Enfim, todos os custos recalculados.");
+              delay(60000);                
+              //x_atual = x_robo;
+              //y_atual = y_robo;
+              //melhor_caminho();
+              //mover();
+              //Serial.println("FIMMMMM");               
             }            
           }
           else{
@@ -742,13 +794,8 @@ void mover(){
               //antes de o robô ir pra posição superior direita, verifica se tem um obstáculo.
               if(matriz[x_atual-1][y_atual+1].indice != 2){ //verifica se no nó adjacente tem um obstáculo, se tiver atualiza a matriz.
                 Serial.println("superior direita");
-                //Funcionou
-                //atual2x = atual2x - 1;
-                //atual2y = atual2y + 1;
                 x_atual = x_atual - 1; //ok, com posição atual, retirei argumentos do melhor_caminho().
-                y_atual = y_atual + 1;
-                
-                
+                y_atual = y_atual + 1;                                
                 //direita(); //celula da direita depois pra celula de cima
                 //parar(); 
                 //tras();
@@ -756,12 +803,11 @@ void mover(){
               }
               else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
                 Serial.println("Para o robô e atualiza a tabela.");
-                //delay(25000);
-                
+                //delay(25000);               
                 x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
                 y_robo = y_atual;
-                Serial.println(x_robo);
-                Serial.println(y_robo);
+                //Serial.println(x_robo);
+                //Serial.println(y_robo);
                 //delay(25000);
                 
                 x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
@@ -773,14 +819,12 @@ void mover(){
                 
                 atualiza_matriz();  //envia como parâmetro a posição do robô.
                 Serial.println("Enfim, todos os custos recalculados.");
-                delay(60000);
-                
+                delay(60000);                
                 //x_atual = x_robo;
                 //y_atual = y_robo;
                 //melhor_caminho();
                 //mover();
-                //Serial.println("FIMMMMM");
-                                
+                //Serial.println("FIMMMMM");                               
               }            
             }
             else{
@@ -795,14 +839,29 @@ void mover(){
                   //parar();               
                 }
                 else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
+                  Serial.println("Para o robô e atualiza a tabela.");
+                  //delay(25000);               
                   x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
                   y_robo = y_atual;
-                  //atualiza_matriz(x_atual+1, y_atual+1);  //envia como parâmetro a posição do robô.
-                  x_atual = x_robo;
-                  y_atual = y_robo;
-                  melhor_caminho();
-                  mover();
-                  //Serial.println("FIMMMMM");                
+                  //Serial.println(x_robo);
+                  //Serial.println(y_robo);
+                  //delay(25000);
+                  
+                  x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+                  y_atual = y_atual + 1;
+  
+                  //salva a posição do obstáculo, pois será usada posteriormente.
+                  obstaculo_x = x_atual;
+                  obstaculo_y = y_atual; 
+                  
+                  atualiza_matriz();  //envia como parâmetro a posição do robô.
+                  Serial.println("Enfim, todos os custos recalculados.");
+                  delay(60000);                
+                  //x_atual = x_robo;
+                  //y_atual = y_robo;
+                  //melhor_caminho();
+                  //mover();
+                  //Serial.println("FIMMMMM");         
                 }            
               }
               else{
@@ -819,14 +878,29 @@ void mover(){
                     //para();              
                   }
                   else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
-                    x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
-                    y_robo = y_atual;
-                    //atualiza_matriz(x_atual-1, y_atual-1);  //envia como parâmetro a posição do robô.
-                    x_atual = x_robo;
-                    y_atual = y_robo;
-                    melhor_caminho();
-                    mover();
-                    //Serial.println("FIMMMMM");                
+                      Serial.println("Para o robô e atualiza a tabela.");
+                      //delay(25000);               
+                      x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
+                      y_robo = y_atual;
+                      //Serial.println(x_robo);
+                      //Serial.println(y_robo);
+                      //delay(25000);
+                      
+                      x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+                      y_atual = y_atual + 1;
+      
+                      //salva a posição do obstáculo, pois será usada posteriormente.
+                      obstaculo_x = x_atual;
+                      obstaculo_y = y_atual; 
+                      
+                      atualiza_matriz();  //envia como parâmetro a posição do robô.
+                      Serial.println("Enfim, todos os custos recalculados.");
+                      delay(60000);                
+                      //x_atual = x_robo;
+                      //y_atual = y_robo;
+                      //melhor_caminho();
+                      //mover();
+                      //Serial.println("FIMMMMM");            
                   }                               
                 }
                 else{
@@ -842,14 +916,29 @@ void mover(){
                       //para();             
                     }
                     else{ //se tem um obstáculo, precisa atualizar os valores da matriz, para fazer o desvio.
-                      x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
-                      y_robo = y_atual;
-                      //atualiza_matriz(x_atual+1, y_atual-1);  //envia como parâmetro a posição do robô.
-                      x_atual = x_robo;
-                      y_atual = y_robo;
-                      melhor_caminho();
-                      mover();
-                      //Serial.println("FIMMMMM");                
+                        Serial.println("Para o robô e atualiza a tabela.");
+                        //delay(25000);               
+                        x_robo = x_atual; //salva a posição em que o robô achou o obstáculo.
+                        y_robo = y_atual;
+                        //Serial.println(x_robo);
+                        //Serial.println(y_robo);
+                        //delay(25000);
+                        
+                        x_atual = x_atual - 1; //a posição atual é agora a posição que está o obstáculo.
+                        y_atual = y_atual + 1;
+        
+                        //salva a posição do obstáculo, pois será usada posteriormente.
+                        obstaculo_x = x_atual;
+                        obstaculo_y = y_atual; 
+                        
+                        atualiza_matriz();  //envia como parâmetro a posição do robô.
+                        Serial.println("Enfim, todos os custos recalculados.");
+                        delay(60000);                
+                        //x_atual = x_robo;
+                        //y_atual = y_robo;
+                        //melhor_caminho();
+                        //mover();
+                        //Serial.println("FIMMMMM");                
                     }                                                         
                   }
                 }
@@ -864,12 +953,6 @@ void mover(){
 
 void melhor_caminho(){
   byte i, j;
-  //byte inix, iniy;
-  //inix=5;
-  //iniy=1;
-  //Serial.print("Melhor Caminho, posição atual:");
-  //Serial.println(x_atual);
-  //Serial.println(y_atual);
 
   for(i=0;i<num_linhas;i++){ //percorre toda matriz.
     for(j=0;j<num_colunas;j++){
@@ -880,19 +963,16 @@ void melhor_caminho(){
           y_atual=j;
           Serial.println("Cima");
           if(x_atual==x_fim && y_atual==y_fim){
-            //Serial.println("Mover");
-            //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-            //atualizar a posição atual
-            x_atual= x_atual + 5;
-            y_atual= y_atual - 5;
-            //Serial.println(x_atual);
-            //Serial.println(y_atual);
+            x_atual = x_inicio;
+            y_atual = y_inicio;
+           
             mover();
-            //Serial.println("Fim 1");
+                          
+            Serial.println("Fim 4");
             tempo = millis();
             //Serial.print("Tempo de execução em ms: ");
             Serial.println(tempo);
-            delay(25000);    /////////////FIM
+            delay(25000);
           }
           melhor_caminho(); //x_atual, y_atual
         }
@@ -904,16 +984,12 @@ void melhor_caminho(){
             y_atual=j;
             Serial.println("Baixo");
             if(x_atual==x_fim && y_atual==y_fim){
-              //Serial.println("Mover");
-              //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-              //x_atual=5;
-              //y_atual=1;
-              x_atual= x_atual + 5;
-              y_atual= y_atual - 5;
-              //Serial.println(x_atual);
-              //Serial.println(y_atual);
+              x_atual = x_inicio;
+              y_atual = y_inicio;
+             
               mover();
-              //Serial.println("Fim 2");
+                            
+              Serial.println("Fim 4");
               tempo = millis();
               //Serial.print("Tempo de execução em ms: ");
               Serial.println(tempo);
@@ -929,19 +1005,16 @@ void melhor_caminho(){
               y_atual=j;
               Serial.println("Esquerda");
               if(x_atual==x_fim && y_atual==y_fim){
-                //Serial.println("Mover");
-                //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-                x_atual= x_atual + 5;
-                y_atual= y_atual - 5;
-                //Serial.println(x_atual);
-                //Serial.println(y_atual);          
+                x_atual = x_inicio;
+                y_atual = y_inicio;
+               
                 mover();
-                //Serial.println("Fim 3");
+                              
+                Serial.println("Fim 4");
                 tempo = millis();
                 //Serial.print("Tempo de execução em ms: ");
                 Serial.println(tempo);
                 delay(25000);
-
               }
               melhor_caminho();
             }
@@ -952,16 +1025,12 @@ void melhor_caminho(){
               y_atual=j;
               Serial.println("Direita");
               if(x_atual==x_fim && y_atual==y_fim){
-                //Serial.println("Mover");
-                //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-                x_atual= x_atual + 5;
-                y_atual= y_atual - 5;
-                //x_atual=5;
-                //y_atual=1;
-                //Serial.println(x_atual);
-                //Serial.println(y_atual);
+                x_atual = x_inicio;
+                y_atual = y_inicio;
+               
                 mover();
-                //Serial.println("Fim 4");
+                              
+                Serial.println("Fim 4");
                 tempo = millis();
                 //Serial.print("Tempo de execução em ms: ");
                 Serial.println(tempo);
@@ -976,29 +1045,11 @@ void melhor_caminho(){
                 y_atual=j;
                 Serial.println("Superior Direita");
                 if(x_atual==x_fim && y_atual==y_fim){
-                  //Serial.println("Mover");
-                  //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-                  //x_atual=inix;
-                  //y_atual=iniy;
-                  
-                  
-                  //x_atual= x_atual + 5;
-                  //y_atual= y_atual - 5;
-                  
-                  
-                  
-                  //Serial.println(x_atual);
-                  //Serial.println(y_atual);
-                  //Serial.print("Melhor Caminho, posição atual:");
-                  //Serial.println(x_atual);
-                  //Serial.println(y_atual);
-                  
                   x_atual = x_inicio;
                   y_atual = y_inicio;
-                  
+                 
                   mover();
-                  
-                  
+                                
                   Serial.println("Fim 4");
                   tempo = millis();
                   //Serial.print("Tempo de execução em ms: ");
@@ -1014,16 +1065,12 @@ void melhor_caminho(){
                   y_atual=j;
                   Serial.println("Inferior Direita");
                   if(x_atual==x_fim && y_atual==y_fim){
-                    //Serial.println("Mover");
-                    //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-                    //x_atual=5;
-                    //y_atual=1;
-                    x_atual= x_atual + 5;
-                    y_atual= y_atual - 5;
-                    //Serial.println(x_atual);
-                    //Serial.println(y_atual);
+                    x_atual = x_inicio;
+                    y_atual = y_inicio;
+                   
                     mover();
-                    //Serial.println("Fim 4");
+                                  
+                    Serial.println("Fim 4");
                     tempo = millis();
                     //Serial.print("Tempo de execução em ms: ");
                     Serial.println(tempo);
@@ -1038,16 +1085,12 @@ void melhor_caminho(){
                     y_atual=j;
                     Serial.println("Superior Esquerda");
                     if(x_atual==x_fim && y_atual==y_fim){
-                      //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-                      //x_atual=5;
-                      //y_atual=1;
-                      x_atual= x_atual + 5;
-                      y_atual= y_atual - 5;
-                      //Serial.println(x_atual);
-                      //Serial.println(y_atual);
-                      //Serial.println("Mover");
+                      x_atual = x_inicio;
+                      y_atual = y_inicio;
+                     
                       mover();
-                      //Serial.println("Fim 4");
+                                    
+                      Serial.println("Fim 4");
                       tempo = millis();
                       //Serial.print("Tempo de execução em ms: ");
                       Serial.println(tempo);
@@ -1063,16 +1106,12 @@ void melhor_caminho(){
                       y_atual=j;
                       Serial.println("Inferior Esquerda");
                       if(x_atual==x_fim && y_atual==y_fim){
-                        //Depois de descoberto o caminho e os movimentos do robo, a posição atual volta para o inicio.
-                        //x_atual=5;
-                        //y_atual=1;
-                        x_atual= x_atual + 5;
-                        y_atual= y_atual - 5;
-                        //Serial.println(x_atual);
-                        //Serial.println(y_atual);
-                        //Serial.println("Mover");
+                        x_atual = x_inicio;
+                        y_atual = y_inicio;
+                       
                         mover();
-                        //Serial.println("Fim 4");
+                                      
+                        Serial.println("Fim 4");
                         tempo = millis();
                         //Serial.print("Tempo de execução em ms: ");
                         Serial.println(tempo);
@@ -1080,8 +1119,7 @@ void melhor_caminho(){
                       }
                       melhor_caminho();
                       
-                     }
-                                      
+                     }                                      
                     }                                                                              
                   }                
                 }
