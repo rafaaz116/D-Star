@@ -204,102 +204,28 @@ void atualiza_matriz(){
   Serial.println("posição em que esta o robô:");
   Serial.println(x_atual);
   Serial.println(y_atual);
+  //atuais -> (3,2) do slide, posição do robô 
   //imprimir_matriz_h();
   delay(60000);
-  /*
-  lista_aberta[it_aberta] = matriz[x][y];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-  it_aberta++;
-  ultimo++;
-  matriz[x][y].tag=1; //analisado de novo, ou seja permanece com 1.
-
-  lista_aberta[it_aberta] = matriz[x-1][y];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x-1][y].tag=1; //analisado de novo, ou seja permanece com 1.
-
-  lista_aberta[it_aberta] = matriz[x][y+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x][y+1].tag=1; //analisado de novo, ou seja permanece com 1.
-
-  lista_aberta[it_aberta] = matriz[x+1][y];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x+1][y].tag=1; //analisado de novo, ou seja permanece com 1.
-
-  lista_aberta[it_aberta] = matriz[x][y-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x][y-1].tag=1; //analisado de novo, ou seja permanece com 1.
-
-    
-
-  lista_aberta[it_aberta] = matriz[x-1][y+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x-1][y+1].tag=1; //analisado de novo, ou seja permanece com 1.
-
-  lista_aberta[it_aberta] = matriz[x+1][y+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x+1][y+1].tag=1; //analisado de novo, ou seja permanece com 1.
-
-  lista_aberta[it_aberta] = matriz[x-1][y-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x-1][y-1].tag=1; //analisado de novo, ou seja permanece com 1.
-
-  lista_aberta[it_aberta] = matriz[x+1][y-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.         
-  it_aberta++;
-  ultimo++;
-  matriz[x+1][y-1].tag=1; //analisado de novo, ou seja permanece com 1.
+ 
 
 
-  insertion_sort(primeiro, ultimo);
-
-  //ele vai fazer este processo até que chegue em uma posição da lista aberta que seja o obstáculo, aí ele analisa quem aponta pra ele
-  while(lista_aberta[primeiro].nome != matriz[x_atual][y_atual].nome){ //ANALISAR AONDE TINHA PARADO O X ATUAL E O Y ATUAL KKK, enquanto x do objeto for diferente do atual
-    detectar_vizinhos(); //como já está tudo calculado, ele não vai calcular os custos.
-    lista_fechada[it_fechada] = lista_aberta[primeiro];
-    it_fechada++;
-    primeiro++;
-    insertion_sort(primeiro, ultimo);
-    busca_celula_analisar();  
-  }
-  //se chegou no objeto, ele procura quem aponta pra ele.
-    
-  for(i=0;i<num_linhas;i++){
-    for(j=0;j<num_colunas;j++){
-      if(matriz[x][y].nome == matriz[i][j].pai){ //celula atual.nome == posicao iterativa.pai, se tem uma celula vizinha que aponta pra o atual
-        matriz[i][j].h = 255; //raise, elevação.
-        x_pos_robo = i;
-        y_pos_robo = j; 
-      }
-    }
-  }
-
-  while(lista_aberta[primeiro].nome != matriz[x_pos_robo][y_pos_robo].nome){ //ANALISAR AONDE TINHA PARADO O X ATUAL E O Y ATUAL KKK, enquanto x do objeto for diferente do atual
-    detectar_vizinhos(x_atual, y_atual);
-    lista_fechada[it_fechada] = lista_aberta[primeiro];
-    it_fechada++;
-    primeiro++;
-    insertion_sort(primeiro, ultimo);
-    busca_celula_analisar();  //posição da primeira celula da lista aberta!
-  }
   //se for igual a posição que aponta para o obstáculo(é a posição que está o robô)
+  
   //> (3,2)
-  atual2x = x_pos_robo;
-  atual2y = y_pos_robo;
-  while(lista_aberta[primeiro].k < matriz[atual2x][atual2y].h){
-    if(matriz[x_pos_robo][y_pos_robo].h > matriz[x_pos_robo][y_pos_robo].k){
+  
+  
+  
+  while(lista_aberta[primeiro].k < matriz[x_robo][x_robo].h){ //matriz[x_robo][x_robo].h, no slide é o .h
+    if(matriz[x_atual][y_atual].h > matriz[x_atual][y_atual].k){
       for(i=0;i<num_linhas;i++){
         for(j=0;j<num_colunas;j++){
-          if((x_pos_robo-1)==i && (y_pos_robo==j)){ //é um vizinho
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+          if((x_atual-1)==i && y_atual==j){ //é um vizinho
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
             }
             else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
                  lista_aberta[it_aberta] = matriz[i][j];
                  it_aberta++;
@@ -309,27 +235,29 @@ void atualiza_matriz(){
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
                 if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                }
-                else{
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;                   
-                }           
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;                   
+                  } 
+                }          
               }  
             }
           }
-          if((x_pos_robo)==i && ((y_pos_robo+1)==j)){
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+          if(x_atual==i && (y_atual+1)==j){
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
             }
             else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
                  lista_aberta[it_aberta] = matriz[i][j];
                  it_aberta++;
@@ -344,112 +272,29 @@ void atualiza_matriz(){
                   it_aberta++;
                   ultimo++;
                   matriz[i][j].tag=1;
-                }
-                else{
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1; 
-                }           
-              }  
-            }        
-          }
-          if((x_pos_robo+1)==i && (y_pos_robo==j)){
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                }
-                else{
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1; 
-                }                       
-              }  
-            }
-          }
-          if((x_pos_robo)==i && ((y_pos_robo-1)==j)){
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                }
-                else{
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1; 
-                }                                       
-              }  
-            }
-          }
-          if((x_pos_robo-1)==i && ((y_pos_robo+1)==j)){
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                }
-                else{
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1; 
-                }                       
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1; 
+                  }                                
+                }          
               }  
             }        
           }
-          if((x_pos_robo+1)==i && ((y_pos_robo+1)==j)){
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+          if((x_atual+1)==i && y_atual==j){
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
             }
             else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
                  lista_aberta[it_aberta] = matriz[i][j];
                  it_aberta++;
@@ -464,22 +309,177 @@ void atualiza_matriz(){
                   it_aberta++;
                   ultimo++;
                   matriz[i][j].tag=1;
-                }
-                else{
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1; 
+                  }                               
+                }                      
+              }  
+            }
+          }
+          if((x_atual)==i && ((y_atual-1)==j)){
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+            }
+            else{
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
+                 matriz[i][j].h =  255;
+                 lista_aberta[it_aberta] = matriz[i][j];
+                 it_aberta++;
+                 ultimo++;
+                 matriz[i][j].tag=1;
+              }
+              else{ //adjacente que não aponta pra posição do robô (3,2)
+              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
+                if(matriz[i][j].h != matriz[i][j].k){
+                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
                   lista_aberta[it_aberta] = matriz[i][j];
                   it_aberta++;
                   ultimo++;
-                  matriz[i][j].tag=1; 
+                  matriz[i][j].tag=1;
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1; 
+                  }  
+                }                                     
+              }  
+            }
+          }
+          if((x_atual-1)==i && ((y_atual+1)==j)){
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+            }
+            else{
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
+                 matriz[i][j].h =  255;
+                 lista_aberta[it_aberta] = matriz[i][j];
+                 it_aberta++;
+                 ultimo++;
+                 matriz[i][j].tag=1;
+              }
+              else{ //adjacente que não aponta pra posição do robô (3,2)
+              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
+                if(matriz[i][j].h != matriz[i][j].k){
+                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                  lista_aberta[it_aberta] = matriz[i][j];
+                  it_aberta++;
+                  ultimo++;
+                  matriz[i][j].tag=1;
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1; 
+                  }  
+                }                     
+              }  
+            }        
+          }
+          if((x_atual+1)==i && ((y_atual+1)==j)){
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+            }
+            else{
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
+                 matriz[i][j].h =  255;
+                 lista_aberta[it_aberta] = matriz[i][j];
+                 it_aberta++;
+                 ultimo++;
+                 matriz[i][j].tag=1;
+              }
+              else{ //adjacente que não aponta pra posição do robô (3,2)
+              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
+                if(matriz[i][j].h != matriz[i][j].k){
+                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                  lista_aberta[it_aberta] = matriz[i][j];
+                  it_aberta++;
+                  ultimo++;
+                  matriz[i][j].tag=1;
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1; 
+                  }
+                }                      
+              }  
+            }
+          }
+          if((x_atual-1)==i && ((y_atual-1)==j)){
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+            }
+            else{
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
+                 matriz[i][j].h =  255;
+                 lista_aberta[it_aberta] = matriz[i][j];
+                 it_aberta++;
+                 ultimo++;
+                 matriz[i][j].tag=1;
+              }
+              else{ //adjacente que não aponta pra posição do robô (3,2)
+              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
+                if(matriz[i][j].h != matriz[i][j].k){
+                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                  lista_aberta[it_aberta] = matriz[i][j];
+                  it_aberta++;
+                  ultimo++;
+                  matriz[i][j].tag=1;
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1; 
+                  }                
                 }                       
               }  
             }
           }
-          if((x_pos_robo-1)==i && ((y_pos_robo-1)==j)){
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
+          if((x_atual+1)==i && ((y_atual-1)==j)){
+            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
+              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
             }
             else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
+              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
                  lista_aberta[it_aberta] = matriz[i][j];
                  it_aberta++;
@@ -494,42 +494,19 @@ void atualiza_matriz(){
                   it_aberta++;
                   ultimo++;
                   matriz[i][j].tag=1;
-                }
-                else{
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1; 
-                }                       
-              }  
-            }
-          }
-          if((x_pos_robo+1)==i && ((y_pos_robo-1)==j)){
-            if(matriz[i][j].h < matriz[x_pos_robo][y_pos_robo].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_pos_robo][y_pos_robo].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_pos_robo][y_pos_robo].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                }
-                else{
-                  lista_aberta[it_aberta] = matriz[i][j]; 
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
+                  if(matriz[i][j].h != 255.00){
+                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
+                    lista_aberta[it_aberta] = matriz[i][j];
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
+                  else{
+                    lista_aberta[it_aberta] = matriz[i][j]; 
+                    it_aberta++;
+                    ultimo++;
+                    matriz[i][j].tag=1;
+                  }
                 }                       
               }  
             }
@@ -542,10 +519,10 @@ void atualiza_matriz(){
         //verifica os vizinhos
       for(i=0;i<num_linhas;i++){
         for(j=0;j<num_colunas;j++){
-          if((x_pos_robo-1)==i && (y_pos_robo==j)){ //é um vizinho
+          if((x_atual-1)==i && (y_atual==j)){ //é um vizinho
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -553,10 +530,10 @@ void atualiza_matriz(){
               matriz[i][j].tag=1;
             }
           }
-          if((x_pos_robo)==i && ((y_pos_robo+1)==j)){
+          if((x_atual)==i && ((y_atual+1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -564,10 +541,10 @@ void atualiza_matriz(){
               matriz[i][j].tag=1;
             }       
           }
-          if((x_pos_robo+1)==i && (y_pos_robo==j)){
+          if((x_atual+1)==i && (y_atual==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -575,10 +552,10 @@ void atualiza_matriz(){
               matriz[i][j].tag=1;            
             }
           }
-          if((x_pos_robo)==i && ((y_pos_robo-1)==j)){
+          if((x_atual)==i && ((y_atual-1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -586,10 +563,10 @@ void atualiza_matriz(){
               matriz[i][j].tag=1;            
             }
           }
-          if((x_pos_robo-1)==i && ((y_pos_robo+1)==j)){
+          if((x_atual-1)==i && ((y_atual+1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -597,10 +574,10 @@ void atualiza_matriz(){
               matriz[i][j].tag=1;       
             }        
           }
-          if((x_pos_robo+1)==i && ((y_pos_robo+1)==j)){
+          if((x_atual+1)==i && ((y_atual+1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; ////vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -608,10 +585,10 @@ void atualiza_matriz(){
               matriz[i][j].tag=1;            
             }
           }
-          if((x_pos_robo-1)==i && ((y_pos_robo-1)==j)){
+          if((x_atual-1)==i && ((y_atual-1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; ////vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -619,10 +596,10 @@ void atualiza_matriz(){
               matriz[i][j].tag=1;            
             }
           }
-          if((x_pos_robo+1)==i && ((y_pos_robo-1)==j)){
+          if((x_atual+1)==i && ((y_atual-1)==j)){
             if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[atual2x][atual2y].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[atual2x][atual2y].h + 1.4; //LOWER
+              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
               matriz[i][j].k = matriz[i][j].h;
               lista_aberta[it_aberta] = matriz[i][j];
               it_aberta++;
@@ -644,7 +621,6 @@ void atualiza_matriz(){
     busca_celula_analisar(); 
   }
 
-  */
 }
 
 
@@ -796,6 +772,9 @@ void mover(){
                 obstaculo_y = y_atual; 
                 
                 atualiza_matriz();  //envia como parâmetro a posição do robô.
+                Serial.println("Enfim, todos os custos recalculados.");
+                delay(60000);
+                
                 //x_atual = x_robo;
                 //y_atual = y_robo;
                 //melhor_caminho();
