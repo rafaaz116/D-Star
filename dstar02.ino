@@ -29,7 +29,7 @@ typedef struct cel{
 }CELULA;
 
 CELULA matriz[6][7]; 
-CELULA lista_aberta[(num_linhas*num_colunas) + 10];
+CELULA lista_aberta[(num_linhas*num_colunas) + 20];
 byte it_aberta=0;
 CELULA lista_fechada[num_linhas*num_colunas];
 byte it_fechada=0;
@@ -82,7 +82,7 @@ void iniciar_matriz(){
 
 void iniciar_lista_aberta(){
   byte i;
-  for(i=0;i<(num_linhas*num_colunas)+10;i++){
+  for(i=0;i<(num_linhas*num_colunas)+20;i++){
     lista_aberta[i].h=0;
     lista_aberta[i].k=0;
     lista_aberta[i].tag=0;
@@ -233,7 +233,8 @@ void atualiza_matriz(){
       for(i=0;i<num_linhas;i++){
         for(j=0;j<num_colunas;j++){
 
-          /*
+ 
+           //primeiro vizinho
           if((x_atual-1)==i && y_atual==j && matriz[x_atual-1][y_atual].indice != 2){ //este é um vizinho obstáculo
             //Serial.println("O vizinho é um obstáculo");
             if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
@@ -243,6 +244,7 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
+                 /*
                  flag = 0;
                  for(i=primeiro;i<num_linhas*num_colunas;i++){
                    if(matriz[x_atual-1][y_atual].nome != lista_aberta[i].nome){
@@ -265,7 +267,8 @@ void atualiza_matriz(){
                  else{
                   //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                  }
-                 //add_lista_aberta(x_atual-1, y_atual);
+                 */
+                 add_lista_aberta(x_atual-1, y_atual);
                  Serial.println("estado em RAISE");
               }
               else{ //adjacente que não aponta pra posição do robô (3,2)
@@ -285,6 +288,7 @@ void atualiza_matriz(){
                   }
                 }
                 else{
+                  /*
                    flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual-1][y_atual].nome != lista_aberta[i].nome){
@@ -307,7 +311,8 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
-                  //add_lista_aberta(x_atual-1, y_atual);
+                   */
+                  add_lista_aberta(x_atual-1, y_atual);
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }       
               }  
@@ -324,7 +329,8 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
-                 //add_lista_aberta(x_atual, y_atual+1);
+                 add_lista_aberta(x_atual, y_atual+1);
+                 /*
                    flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual][y_atual+1].nome != lista_aberta[i].nome){
@@ -347,6 +353,7 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
+                   */
                  Serial.println("estado em RAISE");
               }
               else{ //adjacente que não aponta pra posição do robô (3,2)
@@ -366,6 +373,7 @@ void atualiza_matriz(){
                   }
                 }
                 else{
+                  /*
                                      flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual][y_atual+1].nome != lista_aberta[i].nome){
@@ -388,13 +396,14 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
-                  //add_lista_aberta(x_atual, y_atual+1);
+                   */
+                  add_lista_aberta(x_atual, y_atual+1);
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }          
               }  
             }        
           }
-          */
+          
           
           //TÁ DANDO ERRO NO IF DE BAIXO
           
@@ -457,7 +466,7 @@ void atualiza_matriz(){
                  add_lista_aberta(x_atual+1, y_atual);
                  imprime_lista_aberta(primeiro);
                  Serial.println("estado em RAISE");
-                 delay(80000);
+                 //delay(80000);
                  /*
                   * Aqui está o ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO, POR talvez esta na lista aberta.
                  lista_aberta[it_aberta] = matriz[i][j];
@@ -513,7 +522,7 @@ void atualiza_matriz(){
 
                    */
                   
-                  //add_lista_aberta(x_atual+1, y_atual);
+                  add_lista_aberta(x_atual+1, y_atual);
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }                   
               }
@@ -521,7 +530,7 @@ void atualiza_matriz(){
             }
           }
 
-          /*
+          
           // 4 vizinho, vizinho da esquerda
           if((x_atual)==i && ((y_atual-1)==j) && matriz[x_atual][y_atual-1].indice != 2){
             if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
@@ -530,7 +539,8 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
-                 //add_lista_aberta(x_atual, y_atual-1);
+                 add_lista_aberta(x_atual, y_atual-1);
+                 /*
                    flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual][y_atual-1].nome != lista_aberta[i].nome){
@@ -553,6 +563,7 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
+                   */
                  Serial.println("estado em RAISE");
               }
               else{ //adjacente que não aponta pra posição do robô (3,2)
@@ -572,7 +583,8 @@ void atualiza_matriz(){
                   }
                 }
                 else{
-                  //add_lista_aberta(x_atual, y_atual-1);
+                  add_lista_aberta(x_atual, y_atual-1);
+                   /*
                    flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual][y_atual-1].nome != lista_aberta[i].nome){
@@ -595,6 +607,7 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
+                   */
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }                             
               }  
@@ -609,6 +622,7 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
+                 /*
                                     flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual-1][y_atual+1].nome != lista_aberta[i].nome){
@@ -631,8 +645,9 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
-                 //add_lista_aberta(x_atual-1, y_atual+1);
-                 //Serial.println("estado em RAISE");
+                   */
+                 add_lista_aberta(x_atual-1, y_atual+1);
+                 Serial.println("estado em RAISE");
               }
               
               else{ //adjacente que não aponta pra posição do robô (3,2)
@@ -652,6 +667,7 @@ void atualiza_matriz(){
                   }
                 }
                 else{
+                  /*
                    flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual-1][y_atual+1].nome != lista_aberta[i].nome){
@@ -674,7 +690,9 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
-                  //add_lista_aberta(x_atual-1, y_atual+1);
+                   */
+                   
+                  add_lista_aberta(x_atual-1, y_atual+1);
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }                  
               }  
@@ -689,6 +707,7 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
+                 /*
                                     flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual+1][y_atual+1].nome != lista_aberta[i].nome){
@@ -711,8 +730,9 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
-                 //add_lista_aberta(x_atual+1, y_atual+1);
-                 //Serial.println("estado em RAISE");
+                   */
+                 add_lista_aberta(x_atual+1, y_atual+1);
+                 Serial.println("estado em RAISE");
               }
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
@@ -731,7 +751,8 @@ void atualiza_matriz(){
                   }
                 }
                 else{
-                  //add_lista_aberta(x_atual+1, y_atual+1);
+                  add_lista_aberta(x_atual+1, y_atual+1);
+                  /*
                                      flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual+1][y_atual+1].nome != lista_aberta[i].nome){
@@ -754,6 +775,7 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
+                   */
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }
                                       
@@ -768,6 +790,7 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
+                 /*
                                     flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual-1][y_atual-1].nome != lista_aberta[i].nome){
@@ -790,8 +813,9 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
-                 //add_lista_aberta(x_atual-1, y_atual-1);
-                 //Serial.println("estado em RAISE");
+                   */
+                 add_lista_aberta(x_atual-1, y_atual-1);
+                 Serial.println("estado em RAISE");
               }
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
@@ -810,7 +834,8 @@ void atualiza_matriz(){
                   }
                 }
                 else{
-                  //add_lista_aberta(x_atual-1, y_atual-1);
+                  add_lista_aberta(x_atual-1, y_atual-1);
+                  /*
                                      flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual-1][y_atual-1].nome != lista_aberta[i].nome){
@@ -833,6 +858,7 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
+                   */
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }    
               }  
@@ -846,7 +872,8 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
-                 //add_lista_aberta(x_atual+1, y_atual-1);
+                 add_lista_aberta(x_atual+1, y_atual-1);
+                 /*
                                     flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual+1][y_atual-1].nome != lista_aberta[i].nome){
@@ -869,7 +896,8 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
-                 //Serial.println("estado em RAISE");
+                   */
+                 Serial.println("estado em RAISE");
               }
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
@@ -888,7 +916,8 @@ void atualiza_matriz(){
                   }
                 }
                 else{
-                  //add_lista_aberta(x_atual+1, y_atual-1);
+                  add_lista_aberta(x_atual+1, y_atual-1);
+                  /*
                                      flag = 0;
                    for(i=primeiro;i<num_linhas*num_colunas;i++){
                      if(matriz[x_atual+1][y_atual-1].nome != lista_aberta[i].nome){
@@ -911,15 +940,20 @@ void atualiza_matriz(){
                    else{
                     //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
                    }
+                   */
                   Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
                 }                    
               }  
             }
           }
-          */
-        }  //for      
+         
+        }  //for, para analisar os estados adjacentes.    
       } //for
-
+      imprime_lista_aberta(primeiro);
+      imprimir_matriz_h();
+      //INSERTION SORT -- ADD AQUI E RETIRAR O PRIMEIRO DA LISTA ABERTA, E RETIRAR O PRIMEIRO DA LISTA FECHADA.
+      
+      delay(80000);
       
     //tem que ter caculado todos os raise dos vizinhos.
     //depois o proximo atual é o primeiro da lista aberta.
@@ -935,7 +969,8 @@ void atualiza_matriz(){
     Serial.println(x_atual);
     Serial.println(y_atual);
     */ 
-    imprimir_matriz_h();
+    
+    //imprimir_matriz_h();
     delay(80000);
   } //retirar
       
@@ -2107,7 +2142,7 @@ void imprimir_matriz_h(){
 
 void imprime_lista_aberta(byte primerio){
   byte i;
-  for(i=primeiro;i<(num_linhas*num_colunas)+10;i++){
+  for(i=primeiro;i<(num_linhas*num_colunas)+20;i++){
     Serial.print(lista_aberta[i].nome);
     Serial.print(" ");
   }
