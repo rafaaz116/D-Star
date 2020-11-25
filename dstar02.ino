@@ -29,7 +29,7 @@ typedef struct cel{
 }CELULA;
 
 CELULA matriz[6][7]; 
-CELULA lista_aberta[(num_linhas*num_colunas) + 20];
+CELULA *lista_aberta = (CELULA*)malloc(((num_linhas*num_colunas)+20)*sizeof(CELULA));
 byte it_aberta=0;
 CELULA lista_fechada[num_linhas*num_colunas];
 byte it_fechada=0;
@@ -949,15 +949,161 @@ void atualiza_matriz(){
          
         }  //for, para analisar os estados adjacentes.    
       } //for
-      imprime_lista_aberta(primeiro);
-      imprimir_matriz_h();
-      //INSERTION SORT -- ADD AQUI E RETIRAR O PRIMEIRO DA LISTA ABERTA, E RETIRAR O PRIMEIRO DA LISTA FECHADA.
+      //imprime_lista_aberta(primeiro);
+      //imprimir_matriz_h();
       
-      delay(80000);
+
       
     //tem que ter caculado todos os raise dos vizinhos.
     //depois o proximo atual é o primeiro da lista aberta.
-    } //retirar
+    }
+    else{
+      if(matriz[x_atual][y_atual].k == matriz[x_atual][y_atual].h){ // Como K=H
+        //verifica os vizinhos
+        for(i=0;i<num_linhas;i++){
+          for(j=0;j<num_colunas;j++){
+            
+            if((x_atual-1)==i && (y_atual==j) && matriz[x_atual-1][y_atual].indice !=2){ //é um vizinho
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                add_lista_aberta(x_atual-1, y_atual);
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */
+              }
+            }
+            if((x_atual)==i && ((y_atual+1)==j) && matriz[x_atual][y_atual+1].indice!=2){
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                add_lista_aberta(x_atual, y_atual+1);
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */
+              }       
+            }
+            if((x_atual+1)==i && (y_atual==j) && matriz[x_atual+1][y_atual].indice!=2){
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                add_lista_aberta(x_atual+1, y_atual);
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */            
+              }
+            }
+            if((x_atual)==i && ((y_atual-1)==j) && matriz[x_atual][y_atual-1].indice!=2){
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                Serial.println("olá1");
+                //delay(80000);
+                add_lista_aberta(x_atual, y_atual-1);
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */            
+              }
+            }
+            if((x_atual-1)==i && ((y_atual+1)==j) && matriz[x_atual-1][y_atual+1].indice!=2){
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                add_lista_aberta(x_atual-1, y_atual+1);
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */       
+              }        
+            }
+            if((x_atual+1)==i && ((y_atual+1)==j) && matriz[x_atual+1][y_atual+1].indice!=2){
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                add_lista_aberta(x_atual+1, y_atual+1);
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */            
+              }
+            }
+            if((x_atual-1)==i && ((y_atual-1)==j) && matriz[x_atual-1][y_atual-1].indice!=2){
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                add_lista_aberta(x_atual-1, y_atual-1);
+                Serial.println("olá2");
+                
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */            
+              }
+            }
+            if((x_atual+1)==i && ((y_atual-1)==j) && matriz[x_atual+1][y_atual-1].indice!=2){
+              if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
+                matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
+                matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
+                matriz[i][j].k = matriz[i][j].h;
+                add_lista_aberta(x_atual+1, y_atual-1);
+
+                /*
+                lista_aberta[it_aberta] = matriz[i][j];
+                it_aberta++;
+                ultimo++;
+                matriz[i][j].tag=1;
+                */            
+              }
+            }                                                
+          } 
+        }
+          //apenas alguns vizinhos apontam pra posição atual.
+          //colaca-os na lista aberta 
+          //lower.  
+        }
+      }
+    
+      //INSERTION SORT -- ADD AQUI E RETIRAR O PRIMEIRO DA LISTA ABERTA, E RETIRAR O PRIMEIRO DA LISTA FECHADA.
+      imprimir_matriz_h();   //problema de memória, não mostra tudo na tela
+      //delay(10000);
+      lista_fechada[it_fechada] = lista_aberta[primeiro];
+      it_fechada++;
+      primeiro++;
+      insertion_sort(primeiro, ultimo);
+      busca_celula_analisar();
+      imprime_lista_aberta(primeiro); //vai ordenar novamente e o 30 em primeiro.
+      delay(10000);
+      
+      //imprime_lista_fechada();  
+      //delay(80000);
+    
+    
+    //retirar
     //
     /*
     lista_fechada[it_fechada] = lista_aberta[primeiro];
@@ -971,7 +1117,7 @@ void atualiza_matriz(){
     */ 
     
     //imprimir_matriz_h();
-    delay(80000);
+    //delay(80000);
   } //retirar
       
       
