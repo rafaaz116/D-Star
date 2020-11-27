@@ -221,9 +221,11 @@ void atualiza_matriz(){
   //Serial.println(lista_aberta[primeiro].k);
   //Serial.println(matriz[x_robo][y_robo].h);
 
-  while(lista_aberta[primeiro].k < matriz[x_robo][y_robo].h){ //matriz[x_robo][x_robo].h, no slide é o .h
-    //Serial.println(lista_aberta[primeiro].k);
-    //Serial.println(matriz[x_robo][y_robo].h);
+  while((lista_aberta[primeiro].k+0.01) < matriz[x_robo][y_robo].h){ //matriz[x_robo][x_robo].h, no slide é o .h
+    Serial.print("Atual K: ");
+    Serial.println(lista_aberta[primeiro].k+0.01);
+    Serial.print("Robô H: ");
+    Serial.println(matriz[x_robo][y_robo].h);
     
     if(matriz[x_atual][y_atual].h > matriz[x_atual][y_atual].k){
       //Serial.println(matriz[x_atual][y_atual].h);
@@ -244,35 +246,21 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
-                 /*
-                 flag = 0;
-                 for(i=primeiro;i<num_linhas*num_colunas;i++){
-                   if(matriz[x_atual-1][y_atual].nome != lista_aberta[i].nome){
-                     flag=0;
-                   }
-                   else{
-                     flag=1;
-                     lista_aberta[i] = matriz[x_atual-1][y_atual];
-                     i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                   }
-                 }
-              
-                 if(flag == 0){
-                   //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                   lista_aberta[it_aberta] = matriz[x_atual-1][y_atual];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                   it_aberta++;
-                   ultimo++;
-                   matriz[x_atual-1][y_atual].tag=1; //analisado de novo, ou seja permanece com 1.
-                 }
-                 else{
-                  //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                 }
-                 */
+
                  add_lista_aberta(x_atual-1, y_atual);
                  Serial.println("estado em RAISE");
               }
+              else{
+                  
+                  add_lista_aberta(x_atual-1, y_atual);
+                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+              }
+            }
+          }
+              /*
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
+              
                 if(matriz[i][j].h != matriz[i][j].k){
                   matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
                   lista_aberta[it_aberta] = matriz[i][j];
@@ -287,37 +275,12 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
-                else{
-                  /*
-                   flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual-1][y_atual].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual-1][y_atual];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
+                */
                 
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual-1][y_atual];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual-1][y_atual].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
-                  add_lista_aberta(x_atual-1, y_atual);
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
-                }       
-              }  
-            }
-          }
+                //}       
+              //}  
+            //}
+          //}
 
           
           //add outro vizinho
@@ -330,32 +293,17 @@ void atualiza_matriz(){
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
                  add_lista_aberta(x_atual, y_atual+1);
-                 /*
-                   flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual][y_atual+1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual][y_atual+1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
                 
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual][y_atual+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual][y_atual+1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
                  Serial.println("estado em RAISE");
               }
+              else{
+                  
+                  add_lista_aberta(x_atual, y_atual+1);
+                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+              }
+            }
+          } 
+              /*
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
                 if(matriz[i][j].h != matriz[i][j].k){
@@ -372,37 +320,11 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
-                else{
-                  /*
-                                     flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual][y_atual+1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual][y_atual+1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual][y_atual+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual][y_atual+1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
-                  add_lista_aberta(x_atual, y_atual+1);
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
-                }          
-              }  
-            }        
-          }
+                */
+                         
+             // }  
+            //}        
+          //}
           
           
           //TÁ DANDO ERRO NO IF DE BAIXO
@@ -428,59 +350,21 @@ void atualiza_matriz(){
                  //teste para ver se adiciona no final da lista aberta. Dá erro!!!! quando adiciona {O ERRO É QUE A LISTA ABERTA JÁ ESTAVA CHEIA}
                  //Serial.print("Iterador da lista aberta: ");
                  //Serial.println(it_aberta);
-                 /*
-                 lista_aberta[it_aberta] = matriz[i][j];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1; //analisado de novo, ou seja permanece com 1.
-                 */
-                 
-                 /*
-                 //o erro ta aqui, na hora de add na lista aberta
-                 flag2 = 0;
-                 for(m=primeiro;m<(num_linhas*num_colunas);m++){
-                   if(matriz[i][j].nome != lista_aberta[m].nome){
-                     flag2=0;
-                   }
-                   else{
-                     flag2=1;
-                     lista_aberta[m] = matriz[i][j];
-                     m= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                   }
-                 }
-                 
-                 if(flag2 == 0){
-                   //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                   lista_aberta[it_aberta] = matriz[i][j];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                   it_aberta++;
-                   ultimo++;
-                   matriz[i][j].tag=1; //analisado de novo, ou seja permanece com 1.
-                 }
-                 else{
-                   //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                 }
-                 
-                 //a = x_atual+1;
-                 //b = y_atual;
-                 */
+
                  add_lista_aberta(x_atual+1, y_atual);
                  imprime_lista_aberta(primeiro);
                  Serial.println("estado em RAISE");
-                 //delay(80000);
-                 /*
-                  * Aqui está o ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO, POR talvez esta na lista aberta.
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-                 //Serial.println("oi2");
-                 //Serial.println("estados em RAISE");
-                 //delay(80000);
-                 */
-              }                  
-              
+
+              }
+              else{
+               
+                add_lista_aberta(x_atual+1, y_atual);
+                Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+              }                   
+              /*
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
+              
                 if(matriz[i][j].h != matriz[i][j].k){
                   matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
                   lista_aberta[it_aberta] = matriz[i][j];
@@ -495,37 +379,9 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
-                else{
-                  /*
-                   flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual+1][y_atual].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual+1][y_atual];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual+1][y_atual];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual+1][y_atual].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-
-                   */
-                  
-                  add_lista_aberta(x_atual+1, y_atual);
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
-                }                   
-              }
+                */
+                                
+              
                 
             }
           }
@@ -540,32 +396,10 @@ void atualiza_matriz(){
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
                  add_lista_aberta(x_atual, y_atual-1);
-                 /*
-                   flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual][y_atual-1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual][y_atual-1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual][y_atual-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual][y_atual-1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
+  
                  Serial.println("estado em RAISE");
               }
+              /*
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
                 if(matriz[i][j].h != matriz[i][j].k){
@@ -582,35 +416,13 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
+                */
                 else{
                   add_lista_aberta(x_atual, y_atual-1);
-                   /*
-                   flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual][y_atual-1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual][y_atual-1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual][y_atual-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual][y_atual-1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+       
+                  Serial.println("LOWER");
                 }                             
-              }  
+                
             }
           }
 
@@ -622,34 +434,11 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
-                 /*
-                                    flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual-1][y_atual+1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual-1][y_atual+1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual-1][y_atual+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual-1][y_atual+1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
+  
                  add_lista_aberta(x_atual-1, y_atual+1);
                  Serial.println("estado em RAISE");
               }
-              
+              /*
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
                 if(matriz[i][j].h != matriz[i][j].k){
@@ -666,38 +455,13 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
-                else{
-                  /*
-                   flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual-1][y_atual+1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual-1][y_atual+1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual-1][y_atual+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual-1][y_atual+1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
-                   
-                  add_lista_aberta(x_atual-1, y_atual+1);
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
-                }                  
-              }  
-             
-            }                   
+                */
+              else{
+                 
+                add_lista_aberta(x_atual-1, y_atual+1);
+                Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+              }                  
+            }                               
           }
           // 6 vizinho, 
           if((x_atual+1)==i && ((y_atual+1)==j) && matriz[x_atual+1][y_atual+1].indice != 2){
@@ -707,34 +471,13 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
-                 /*
-                                    flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual+1][y_atual+1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual+1][y_atual+1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual+1][y_atual+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual+1][y_atual+1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
+   
                  add_lista_aberta(x_atual+1, y_atual+1);
                  Serial.println("estado em RAISE");
               }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
+              
+                /*
+                //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
                 if(matriz[i][j].h != matriz[i][j].k){
                   matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
@@ -750,36 +493,12 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
-                else{
-                  add_lista_aberta(x_atual+1, y_atual+1);
-                  /*
-                                     flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual+1][y_atual+1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual+1][y_atual+1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual+1][y_atual+1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual+1][y_atual+1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
-                }
-                                      
-              }  
+                */
+              else{
+                add_lista_aberta(x_atual+1, y_atual+1);
+    
+                Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+              }                                                      
             }
           }
           //vizinho 7
@@ -790,33 +509,11 @@ void atualiza_matriz(){
             else{
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
-                 /*
-                                    flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual-1][y_atual-1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual-1][y_atual-1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual-1][y_atual-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual-1][y_atual-1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
+           
                  add_lista_aberta(x_atual-1, y_atual-1);
                  Serial.println("estado em RAISE");
               }
+              /*
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
                 if(matriz[i][j].h != matriz[i][j].k){
@@ -833,35 +530,12 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
-                else{
-                  add_lista_aberta(x_atual-1, y_atual-1);
-                  /*
-                                     flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual-1][y_atual-1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual-1][y_atual-1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual-1][y_atual-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual-1][y_atual-1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
-                }    
-              }  
+                */
+              else{
+                add_lista_aberta(x_atual-1, y_atual-1);
+     
+                Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+              }     
             }
           }
           //vizinho 8
@@ -873,32 +547,10 @@ void atualiza_matriz(){
               if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
                  matriz[i][j].h =  255;
                  add_lista_aberta(x_atual+1, y_atual-1);
-                 /*
-                                    flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual+1][y_atual-1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual+1][y_atual-1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual+1][y_atual-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual+1][y_atual-1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
+       
                  Serial.println("estado em RAISE");
               }
+              /*
               else{ //adjacente que não aponta pra posição do robô (3,2)
               //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
                 if(matriz[i][j].h != matriz[i][j].k){
@@ -915,35 +567,12 @@ void atualiza_matriz(){
                     matriz[i][j].tag=1;
                   }
                 }
-                else{
-                  add_lista_aberta(x_atual+1, y_atual-1);
-                  /*
-                                     flag = 0;
-                   for(i=primeiro;i<num_linhas*num_colunas;i++){
-                     if(matriz[x_atual+1][y_atual-1].nome != lista_aberta[i].nome){
-                       flag=0;
-                     }
-                     else{
-                       flag=1;
-                       lista_aberta[i] = matriz[x_atual+1][y_atual-1];
-                       i= num_linhas*num_colunas; //se tem um valor na lista aberta sai do for.
-                     }
-                   }
-                
-                   if(flag == 0){
-                     //Serial.println("Este valor não está na lista aberta, portanto add ele.");
-                     lista_aberta[it_aberta] = matriz[x_atual+1][y_atual-1];//add obstaculo e nós adjacentes na lista aberta e ordena-os.(FAZER UMA FUNÇÃO PARA ESSA PARTE QUE SE REPETE, VERIFICAR SE O NÓ ESTA NA LISTA ABERTA E NÃO ADD SE ELE JÁ ESTÁ)      
-                     it_aberta++;
-                     ultimo++;
-                     matriz[x_atual+1][y_atual-1].tag=1; //analisado de novo, ou seja permanece com 1.
-                   }
-                   else{
-                    //Serial.println("Este valor já esta na lista aberta, portanto não adiciona, apenas atualiza, se precisar");
-                   }
-                   */
-                  Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
-                }                    
-              }  
+                */
+              else{
+                add_lista_aberta(x_atual+1, y_atual-1);
+        
+                Serial.println("LOWER"); /////////////////////////Ajustar nos outros esse LOWER.
+              }                                  
             }
           }
          
@@ -1087,7 +716,12 @@ void atualiza_matriz(){
           //lower.  
         }
       }
-    
+      
+      matriz[x_atual][y_atual].indice=4; //depois que recalculou tudo, indice = 4.
+
+
+      
+      
       //INSERTION SORT -- ADD AQUI E RETIRAR O PRIMEIRO DA LISTA ABERTA, E RETIRAR O PRIMEIRO DA LISTA FECHADA.
       imprimir_matriz_h();   //problema de memória, não mostra tudo na tela
       //delay(10000);
@@ -1095,10 +729,29 @@ void atualiza_matriz(){
       it_fechada++;
       primeiro++;
       insertion_sort(primeiro, ultimo);
+      
       busca_celula_analisar();
+      //Obs:
+      //depois que calculou os custos dos vizinhos, esta posição não poderá mais ser primeira da lista aberta, pois esta nó já foi analisado.  
+      //matriz[x_atual][y_atual].indice = 3; //'4' - já foi analisado
+
+      
       imprime_lista_aberta(primeiro); //vai ordenar novamente e o 30 em primeiro.
       delay(10000);
-      
+      if(matriz[x_atual][y_atual].indice == 4){
+        //se sim retira da lista aberta, senão recebe o '3' para ser analisado
+        lista_fechada[it_fechada] = lista_aberta[primeiro];
+        it_fechada++;
+        primeiro++;
+        //não precisa de insertionsort pois não a função não realizou nenhum cálculo a mais.
+        busca_celula_analisar();
+        Serial.println("posição INválida");
+      }
+      else{
+        Serial.println("posição válida");//matriz[x_atual][y_atual].indice=3; //primeira vez na primeira posição da lista aberta.
+      }
+      imprime_lista_aberta(primeiro); //vai ordenar novamente e o 30 em primeiro.
+
       //imprime_lista_fechada();  
       //delay(80000);
     
@@ -1119,417 +772,7 @@ void atualiza_matriz(){
     //imprimir_matriz_h();
     //delay(80000);
   } //retirar
-      
-      
-      
-      /*
-      for(i=0;i<num_linhas;i++){
-        for(j=0;j<num_colunas;j++){
-          if((x_atual-1)==i && y_atual==j){ //é um vizinho
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-                 Serial.println("estados em RAISE");
                  
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;                   
-                  } 
-                }          
-              }  
-            }
-          }
-          if(x_atual==i && (y_atual+1)==j){
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1; 
-                  }                                
-                }          
-              }  
-            }        
-          }
-          if((x_atual+1)==i && y_atual==j){
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1; 
-                  }                               
-                }                      
-              }  
-            }
-          }
-          if((x_atual)==i && ((y_atual-1)==j)){
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1; 
-                  }  
-                }                                     
-              }  
-            }
-          }
-          if((x_atual-1)==i && ((y_atual+1)==j)){
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1; 
-                  }  
-                }                     
-              }  
-            }        
-          }
-          if((x_atual+1)==i && ((y_atual+1)==j)){
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1; 
-                  }
-                }                      
-              }  
-            }
-          }
-          if((x_atual-1)==i && ((y_atual-1)==j)){
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1; 
-                  }                
-                }                       
-              }  
-            }
-          }
-          if((x_atual+1)==i && ((y_atual-1)==j)){
-            if(matriz[i][j].h < matriz[x_atual][y_atual].k){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[x_atual][y_atual].pai =  matriz[i][j].nome; //pai aponta pra esse vizinho.
-            }
-            else{
-              if(matriz[i][j].pai == matriz[x_atual][y_atual].nome){
-                 matriz[i][j].h =  255;
-                 lista_aberta[it_aberta] = matriz[i][j];
-                 it_aberta++;
-                 ultimo++;
-                 matriz[i][j].tag=1;
-              }
-              else{ //adjacente que não aponta pra posição do robô (3,2)
-              //permanece com o mesmo valor(LOWER) e só add apenas na lista aberta.
-                if(matriz[i][j].h != matriz[i][j].k){
-                  matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                  lista_aberta[it_aberta] = matriz[i][j];
-                  it_aberta++;
-                  ultimo++;
-                  matriz[i][j].tag=1;
-                  if(matriz[i][j].h != 255.00){
-                    matriz[i][j].k = matriz[i][j].h; //k recebe o h novo;
-                    lista_aberta[it_aberta] = matriz[i][j];
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                  else{
-                    lista_aberta[it_aberta] = matriz[i][j]; 
-                    it_aberta++;
-                    ultimo++;
-                    matriz[i][j].tag=1;
-                  }
-                }                       
-              }  
-            }
-          }
-                                                          
-        } 
-      } 
-    }
-    else{
-      if(matriz[x_atual][y_atual].k == matriz[y_atual][y_atual].h){ // Como K=H
-        //verifica os vizinhos
-      for(i=0;i<num_linhas;i++){
-        for(j=0;j<num_colunas;j++){
-          if((x_atual-1)==i && (y_atual==j)){ //é um vizinho
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;
-            }
-          }
-          if((x_atual)==i && ((y_atual+1)==j)){
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;
-            }       
-          }
-          if((x_atual+1)==i && (y_atual==j)){
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;            
-            }
-          }
-          if((x_atual)==i && ((y_atual-1)==j)){
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;            
-            }
-          }
-          if((x_atual-1)==i && ((y_atual+1)==j)){
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;       
-            }        
-          }
-          if((x_atual+1)==i && ((y_atual+1)==j)){
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;            
-            }
-          }
-          if((x_atual-1)==i && ((y_atual-1)==j)){
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; ////vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;            
-            }
-          }
-          if((x_atual+1)==i && ((y_atual-1)==j)){
-            if(matriz[i][j].h == 255){ //se esse vizinho tem um h menor que o atual_robo.k
-              matriz[i][j].pai =  matriz[x_atual][y_atual].nome; //vizinho aponta para o atual.
-              matriz[i][j].h = matriz[x_atual][y_atual].h + 1.4; //LOWER
-              matriz[i][j].k = matriz[i][j].h;
-              lista_aberta[it_aberta] = matriz[i][j];
-              it_aberta++;
-              ultimo++;
-              matriz[i][j].tag=1;            
-            }
-          }                                                
-        } 
-      }
-        //apenas alguns vizinhos apontam pra posição atual.
-        //colaca-os na lista aberta 
-        //lower.  
-      }
-    }
-    lista_fechada[it_fechada] = lista_aberta[primeiro];
-    it_fechada++;
-    primeiro++;
-    insertion_sort(primeiro, ultimo);
-    busca_celula_analisar(); 
-    imprimir_matriz_h();
-  }
-*/
 }
 
 
@@ -1698,6 +941,10 @@ void mover(){
               //Serial.println("FIMMMMM");               
             }            
           }
+
+
+
+          
           else{
             if(movimento_robo[m] == 'w'){              
               //antes de o robô ir pra posição superior direita, verifica se tem um obstáculo.
@@ -1728,14 +975,19 @@ void mover(){
                 
                 atualiza_matriz();  //envia como parâmetro a posição do robô.
                 Serial.println("Enfim, todos os custos recalculados.");
-                delay(60000);                
-                //x_atual = x_robo;
-                //y_atual = y_robo;
-                //melhor_caminho();
+                delay(10000);                
+                x_atual = x_robo;
+                y_atual = y_robo;
+                Serial.println("Chama o melhor caminho.");
+                melhor_caminho();
                 //mover();
                 //Serial.println("FIMMMMM");                               
               }            
             }
+
+
+
+            
             else{
               if(movimento_robo[m] == 'x'){              
                 if(matriz[x_atual+1][y_atual+1].indice != 2){ //se não tiver um objeto.
