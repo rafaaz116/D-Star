@@ -815,13 +815,14 @@ void mover(){
         obstaculo_y = y_atual; 
         
         atualiza_matriz();  //envia como parâmetro a posição do robô.
-        Serial.println("Enfim, todos os custos recalculados.");
-        delay(60000);                
-        //x_atual = x_robo;
-        //y_atual = y_robo;
-        //melhor_caminho();
-        //mover();
-        //Serial.println("FIMMMMM"); 
+
+       // Serial.println("Enfim, todos os custos recalculados.");
+        delay(8000);                
+        x_atual = x_robo;
+        y_atual = y_robo;
+        Serial.println("Chama o melhor caminho.");
+        iniciar_movimento_robo();
+        melhor_caminho();
                        
       }                          
       //x = x + 1;        
@@ -860,13 +861,14 @@ void mover(){
           obstaculo_y = y_atual; 
           
           atualiza_matriz();  //envia como parâmetro a posição do robô.
-          Serial.println("Enfim, todos os custos recalculados.");
-          delay(60000);                
-          //x_atual = x_robo;
-          //y_atual = y_robo;
-          //melhor_caminho();
-          //mover();
-          //Serial.println("FIMMMMM");             
+
+          //Serial.println("Enfim, todos os custos recalculados.");
+          delay(8000);                
+          x_atual = x_robo;
+          y_atual = y_robo;
+          Serial.println("Chama o melhor caminho.");
+          iniciar_movimento_robo();
+          melhor_caminho();            
         }         
       }
       else{
@@ -896,13 +898,14 @@ void mover(){
               obstaculo_y = y_atual; 
               
               atualiza_matriz();  //envia como parâmetro a posição do robô.
-              Serial.println("Enfim, todos os custos recalculados.");
-              delay(60000);                
-              //x_atual = x_robo;
-              //y_atual = y_robo;
-              //melhor_caminho();
-              //mover();
-              //Serial.println("FIMMMMM");                
+
+              //Serial.println("Enfim, todos os custos recalculados.");
+              delay(8000);                
+              x_atual = x_robo;
+              y_atual = y_robo;
+              Serial.println("Chama o melhor caminho.");
+              iniciar_movimento_robo();
+              melhor_caminho();              
           }  
         }
         else{
@@ -932,13 +935,14 @@ void mover(){
               obstaculo_y = y_atual; 
               
               atualiza_matriz();  //envia como parâmetro a posição do robô.
-              Serial.println("Enfim, todos os custos recalculados.");
-              delay(60000);                
-              //x_atual = x_robo;
-              //y_atual = y_robo;
-              //melhor_caminho();
-              //mover();
-              //Serial.println("FIMMMMM");               
+
+              //Serial.println("Enfim, todos os custos recalculados.");
+              delay(8000);                
+              x_atual = x_robo;
+              y_atual = y_robo;
+              Serial.println("Chama o melhor caminho.");
+              iniciar_movimento_robo();
+              melhor_caminho();              
             }            
           }
 
@@ -974,14 +978,14 @@ void mover(){
                 obstaculo_y = y_atual; 
                 
                 atualiza_matriz();  //envia como parâmetro a posição do robô.
-                Serial.println("Enfim, todos os custos recalculados.");
-                delay(10000);                
+
+                //Serial.println("Enfim, todos os custos recalculados.");
+                delay(8000);                
                 x_atual = x_robo;
                 y_atual = y_robo;
                 Serial.println("Chama o melhor caminho.");
-                melhor_caminho();
-                //mover();
-                //Serial.println("FIMMMMM");                               
+                iniciar_movimento_robo();
+                melhor_caminho();                               
               }            
             }
 
@@ -991,7 +995,7 @@ void mover(){
             else{
               if(movimento_robo[m] == 'x'){              
                 if(matriz[x_atual+1][y_atual+1].indice != 2){ //se não tiver um objeto.
-                  //Serial.println("inferior direita");
+                  Serial.println("inferior direita");
                   x_atual = x_atual + 1;
                   y_atual = y_atual + 1;
                   //frente(); //celula da direita depois pra celula de baixo
@@ -1016,13 +1020,14 @@ void mover(){
                   obstaculo_y = y_atual; 
                   
                   atualiza_matriz();  //envia como parâmetro a posição do robô.
-                  Serial.println("Enfim, todos os custos recalculados.");
-                  delay(60000);                
-                  //x_atual = x_robo;
-                  //y_atual = y_robo;
-                  //melhor_caminho();
-                  //mover();
-                  //Serial.println("FIMMMMM");         
+
+                  //Serial.println("Enfim, todos os custos recalculados.");
+                  delay(8000);                
+                  x_atual = x_robo;
+                  y_atual = y_robo;
+                  Serial.println("Chama o melhor caminho.");
+                  iniciar_movimento_robo();
+                  melhor_caminho();          
                 }            
               }
               else{
@@ -1030,7 +1035,7 @@ void mover(){
 
 
                   if(matriz[x_atual-1][y_atual-1].indice != 2){ //se não tiver um objeto.
-                    //Serial.println("superior esquerda");                    
+                    Serial.println("superior esquerda");                    
                     x_atual = x_atual - 1;
                     y_atual = y_atual - 1;
                     //esquerda(); //celula da esquerda depois pra celula de cima
@@ -1055,20 +1060,21 @@ void mover(){
                       obstaculo_y = y_atual; 
                       
                       atualiza_matriz();  //envia como parâmetro a posição do robô.
-                      Serial.println("Enfim, todos os custos recalculados.");
-                      delay(60000);                
-                      //x_atual = x_robo;
-                      //y_atual = y_robo;
-                      //melhor_caminho();
-                      //mover();
-                      //Serial.println("FIMMMMM");            
+    
+                      //Serial.println("Enfim, todos os custos recalculados.");
+                      delay(8000);                
+                      x_atual = x_robo;
+                      y_atual = y_robo;
+                      Serial.println("Chama o melhor caminho.");
+                      iniciar_movimento_robo();
+                      melhor_caminho();            
                   }                               
                 }
                 else{
                   if(movimento_robo[m] == 'z'){
 
                     if(matriz[x_atual+1][y_atual-1].indice != 2){ //se não tiver um objeto.
-                      //Serial.println("inferior esquerda");
+                      Serial.println("inferior esquerda");
                       x_atual = x_atual + 1;
                       y_atual = y_atual - 1;
                       //esquerda();
@@ -1093,13 +1099,14 @@ void mover(){
                         obstaculo_y = y_atual; 
                         
                         atualiza_matriz();  //envia como parâmetro a posição do robô.
-                        Serial.println("Enfim, todos os custos recalculados.");
-                        delay(60000);                
-                        //x_atual = x_robo;
-                        //y_atual = y_robo;
-                        //melhor_caminho();
-                        //mover();
-                        //Serial.println("FIMMMMM");                
+      
+                        //Serial.println("Enfim, todos os custos recalculados.");
+                        delay(8000);                
+                        x_atual = x_robo;
+                        y_atual = y_robo;
+                        Serial.println("Chama o melhor caminho.");
+                        iniciar_movimento_robo();
+                        melhor_caminho();               
                     }                                                         
                   }
                 }
@@ -1112,9 +1119,18 @@ void mover(){
   }  
 }
 
+void iniciar_movimento_robo(){
+  int i;
+  for(i=0;i<(num_linhas*num_colunas);i++){
+    movimento_robo[i] = ' ';
+  }
+}
+
 void melhor_caminho(){
   byte i, j;
 
+  
+  
   for(i=0;i<num_linhas;i++){ //percorre toda matriz.
     for(j=0;j<num_colunas;j++){
       if(matriz[x_atual][y_atual].pai==matriz[i][j].nome){ //se o nome da celula for igual ao pai da celula atual
@@ -1133,7 +1149,7 @@ void melhor_caminho(){
             tempo = millis();
             //Serial.print("Tempo de execução em ms: ");
             Serial.println(tempo);
-            delay(25000);
+            delay(90000);
           }
           melhor_caminho(); //x_atual, y_atual
         }
@@ -1154,7 +1170,7 @@ void melhor_caminho(){
               tempo = millis();
               //Serial.print("Tempo de execução em ms: ");
               Serial.println(tempo);
-              delay(25000);
+              delay(90000);
             }
             melhor_caminho();
           }
@@ -1175,7 +1191,7 @@ void melhor_caminho(){
                 tempo = millis();
                 //Serial.print("Tempo de execução em ms: ");
                 Serial.println(tempo);
-                delay(25000);
+                delay(90000);
               }
               melhor_caminho();
             }
@@ -1195,7 +1211,7 @@ void melhor_caminho(){
                 tempo = millis();
                 //Serial.print("Tempo de execução em ms: ");
                 Serial.println(tempo);
-                delay(25000);
+                delay(90000);
               }
               melhor_caminho();    
             }
@@ -1215,7 +1231,7 @@ void melhor_caminho(){
                   tempo = millis();
                   //Serial.print("Tempo de execução em ms: ");
                   Serial.println(tempo);
-                  delay(25000);
+                  delay(90000);
                 }
                 melhor_caminho();
               }
@@ -1235,7 +1251,7 @@ void melhor_caminho(){
                     tempo = millis();
                     //Serial.print("Tempo de execução em ms: ");
                     Serial.println(tempo);
-                    delay(25000);
+                    delay(90000);
                   }
                   melhor_caminho();
                 }
@@ -1255,7 +1271,7 @@ void melhor_caminho(){
                       tempo = millis();
                       //Serial.print("Tempo de execução em ms: ");
                       Serial.println(tempo);
-                      delay(25000);
+                      delay(90000);
                     }
                     melhor_caminho();
                   }
@@ -1276,7 +1292,7 @@ void melhor_caminho(){
                         tempo = millis();
                         //Serial.print("Tempo de execução em ms: ");
                         Serial.println(tempo);
-                        delay(25000);
+                        delay(90000);
                       }
                       melhor_caminho();
                       
