@@ -1,2 +1,2 @@
 # D-Star
-Dstar optimized to running in arduino uno r3
+D-Star optimized to running in arduino uno r3
